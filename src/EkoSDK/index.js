@@ -1,6 +1,6 @@
 import EkoClient, { MessageRepository, ChannelRepository, EkoChannelType } from 'eko-sdk';
 
-const client = new EkoClient({ apiKey: 'b3bee90c39d9a5644831d84e5a0d1688d100ddebef3c6e78' });
+const client = new EkoClient({ apiKey: 'YOUR_API_KEY' });
 client.registerSession({ userId: 'user1234', displayName: 'Bob Newton' });
 
 export const messageRepo = new MessageRepository();

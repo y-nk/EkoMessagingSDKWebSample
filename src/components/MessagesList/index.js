@@ -20,10 +20,7 @@ class MessagesList extends Component {
 
   channelHasMore = () => {
     const messages = messageRepo.messagesForChannel({ channelId: this.props.currentChannel });
-    if (messages.hasMore) {
-      return true
-    }
-    return false
+    return messages.hasMore
   }
   
   render() {

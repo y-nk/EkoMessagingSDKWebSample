@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { MessagesList } from './containers/MessagesList';
 import { AddMessage } from './containers/AddMessage';
 import { Channel } from './containers/Channel';
+import Header from './components/Header';
 import client, { messageRepo } from './EkoSDK';
 import { EkoConnectionStatus } from 'eko-sdk';
 
@@ -36,12 +37,15 @@ class App extends Component {
   render() {
     return (
       <div id="container">
-        <div id="left">
-          <Channel />
-        </div>
-        <div id="right">
-          <MessagesList />
-          <AddMessage />
+        <Header />
+        <div className="row">
+          <div id="left">
+            <Channel />
+          </div>
+          <div id="right">
+            <MessagesList />
+            <AddMessage />
+          </div>
         </div>
       </div>
     );

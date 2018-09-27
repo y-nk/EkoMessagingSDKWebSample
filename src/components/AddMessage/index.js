@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { sendMessage } from '../../EkoSDK';
 
 class AddMessage extends Component {
@@ -21,6 +20,14 @@ class AddMessage extends Component {
             input = node;
           }}
         />
+        <button type="submit" onClick={() => {
+          if (input.value !== '') {
+            this.props.addMessage(input.value, this.props.user[0].name);
+            sendMessage(input.value, this.props.currentChannel);
+            input.value = '';
+          }
+        }
+        } className="send-button">Send</button>
       </section>
     );
   };

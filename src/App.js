@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { MessagesList } from './containers/MessagesList';
 import { AddMessage } from './containers/AddMessage';
 import { Channel } from './containers/Channel';
+import Header from './components/Header';
 import client, { messageRepo } from './EkoSDK';
 import { EkoConnectionStatus } from 'eko-sdk';
 
@@ -18,30 +19,33 @@ class App extends Component {
           this.props.setChannel('ANDROID');
           this.props.setChannel('public_eko');
           const messages = messageRepo.messagesForChannel({ channelId: this.props.currentChannel });
-          messages.once('dataUpdated', data => {
+          messages.on('dataUpdated', data => {
             data.map(message =>
               this.props.loadMessage(message.data.text, message.userId)
             );
-            messages.removeAllListeners('dataUpdated');
+            // messages.removeAllListeners('dataUpdated');
           });
         })
       }
     });
   }
 
-  componentWillUnmount() {
-    client.removeAllListeners('connectionStatusChanged');
-  }
+  // componentWillUnmount() {
+  //   client.removeAllListeners('connectionStatusChanged');
+  // }
 
   render() {
     return (
       <div id="container">
-        <div id="left">
-          <Channel />
-        </div>
-        <div id="right">
-          <MessagesList />
-          <AddMessage />
+        <Header />
+        <div className="row">
+          <div id="left">
+            <Channel />
+          </div>
+          <div id="right">
+            <MessagesList />
+            <AddMessage />
+          </div>
         </div>
       </div>
     );

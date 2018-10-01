@@ -1,4 +1,17 @@
-import EkoClient, { MessageRepository, ChannelRepository, EkoChannelType, MessageEditorRepository } from 'eko-sdk';
+import EkoClient, {
+    _changeSDKDefaultConfig,
+    MessageRepository,
+    ChannelRepository,
+    EkoChannelType,
+    MessageEditorRepository,
+} from 'eko-sdk';
+
+// ATTENTION: The configuration required ONLY for ekosdk sample app to avoid spamming to production endpoints
+_changeSDKDefaultConfig({
+  ws: { endpoint: 'https://api.staging.ekomedia.technology' },
+  http: { endpoint: 'https://api.staging.ekomedia.technology' },
+});
+// ==========
 
 const client = new EkoClient({ apiKey: 'b3bee90c39d9a5644831d84e5a0d1688d100ddebef3c6e78' });
 client.registerSession({ userId: 'user1234', displayName: 'Bob Newton' });

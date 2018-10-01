@@ -7,6 +7,7 @@ import client, { messageRepo } from './EkoSDK';
 import { EkoConnectionStatus } from 'eko-sdk';
 
 class App extends Component {
+
   componentDidMount() {
     client.on('connectionStatusChanged', ({ newValue, oldValue }) => {
       if (newValue === EkoConnectionStatus.Connected) {
@@ -19,20 +20,20 @@ class App extends Component {
           this.props.setChannel('ANDROID');
           this.props.setChannel('public_eko');
           const messages = messageRepo.messagesForChannel({ channelId: this.props.currentChannel });
-          messages.on('dataUpdated', data => {
+          messages.once('dataUpdated', data => {
             data.map(message =>
               this.props.loadMessage(message.data.text, message.userId)
             );
-            // messages.removeAllListeners('dataUpdated');
+            messages.removeAllListeners('dataUpdated');
           });
         })
       }
     });
   }
 
-  // componentWillUnmount() {
-  //   client.removeAllListeners('connectionStatusChanged');
-  // }
+  componentWillUnmount() {
+    client.removeAllListeners('connectionStatusChanged');
+  }
 
   render() {
     return (

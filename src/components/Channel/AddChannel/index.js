@@ -12,6 +12,13 @@ class AddChannel extends Component {
         });
     }
 
+    existingChannel = (Value) => {
+        const allChannels = this.props.channels
+        return allChannels.some(channel => {
+            return channel.channel.toLowerCase() === Value.toLowerCase()
+        })
+    }
+
     render() {
         let input;
         return (
@@ -19,10 +26,13 @@ class AddChannel extends Component {
                 <input placeholder="Add Channel"
                     onKeyPress={e => {
                         if (e.key === 'Enter' && input.value !== '') {
-                            this.props.unloadMessage();
-                            this.props.setChannel(input.value);
-                            this.props.setCurrentChannel(input.value);
-                            joinChannel(input.value);
+                            if (!(this.existingChannel(input.value))) {
+                                this.props.unloadMessage();
+                                this.props.setChannel(input.value);
+                                this.props.setCurrentChannel(input.value);
+                                joinChannel(input.value);
+                                this.updateMessages(input.value);
+                            }
                             input.value = '';
                         }
                     }}

@@ -1,19 +1,6 @@
-import EkoClient, {
-    _changeSDKDefaultConfig,
-    MessageRepository,
-    ChannelRepository,
-    EkoChannelType,
-    MessageEditorRepository,
-} from 'eko-sdk';
+import EkoClient, { MessageRepository, ChannelRepository, EkoChannelType, MessageEditorRepository } from 'eko-sdk';
 
-// ATTENTION: The configuration required ONLY for ekosdk sample app to avoid spamming to production endpoints
-_changeSDKDefaultConfig({
-  ws: { endpoint: 'https://api.staging.ekomedia.technology' },
-  http: { endpoint: 'https://api.staging.ekomedia.technology' },
-});
-// ==========
-
-const client = new EkoClient({ apiKey: 'YOUR-API-KEY' });
+const client = new EkoClient({ apiKey: 'b3bee90c39d9a5644831d84e5a0d1688d100ddebef3c6e78' });
 client.registerSession({ userId: 'user1234', displayName: 'Bob Newton' });
 
 export const messageRepo = new MessageRepository();
@@ -39,6 +26,19 @@ export const joinChannel = (Value) => {
         console.log(`Channel joined: ${model.channelId}`);
     });
 }
+
+// export const updateMessages = (Value) => {
+//     const messages = messageRepo.messagesForChannel({ channelId: Value });
+//     messages.on('dataUpdated', data => {
+//         console.log(data)
+//       data.map(message =>
+//         this.props.loadMessage(message.data.text, message.userId)
+//       );
+//     });
+//     messages.on('dataError', error => {
+//       console.log('Error, Data not loaded')
+//     })
+//   }
 
 export const sendMessage = (Message, Channel) => {
     const messageLiveObject = messageRepo.createTextMessage({

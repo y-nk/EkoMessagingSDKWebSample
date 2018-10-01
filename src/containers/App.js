@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import AppComponent from '../App';
-import { loadMessage, addUser, setChannel, setCurrentChannel } from '../actions';
+import { unloadMessage, loadMessage, addUser, setChannel, setCurrentChannel } from '../actions';
 
 export const App = connect(
     state => ({
@@ -13,5 +13,6 @@ export const App = connect(
         addUser: name => dispatch(addUser(name)),
         setChannel: value => dispatch(setChannel(value)),
         setCurrentChannel: value => dispatch(setCurrentChannel(value)),
+        unloadMessage: () => dispatch(unloadMessage()),
     }),
 )(AppComponent)

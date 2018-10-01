@@ -155,6 +155,11 @@ ul {
   margin-left: 3px;
 }
 
+.infinite-scroll-component {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 .active {
    background-color: #F0F2F4;
 }

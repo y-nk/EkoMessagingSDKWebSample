@@ -1,6 +1,6 @@
 import EkoClient, { MessageRepository, ChannelRepository, EkoChannelType, MessageEditorRepository } from 'eko-sdk';
 
-const client = new EkoClient({ apiKey: 'b3bee90c39d9a5644831d84e5a0d1688d100ddebef3c6e78' });
+const client = new EkoClient({ apiKey: 'YOUR-API-KEY' });
 client.registerSession({ userId: 'user1234', displayName: 'Bob Newton' });
 
 export const messageRepo = new MessageRepository();
@@ -32,6 +32,7 @@ export const sendMessage = (Message, Channel) => {
         channelId: Channel,
         text: Message,
     });
+
     messageLiveObject.on('dataStatusChanged', data => {
         console.log(`Message sent`);
     });
@@ -41,8 +42,8 @@ export const editMessage = (Message) => {
     const editor = new MessageEditorRepository(Message);
     editor.editText({
         text: 'New edited text',
-      }).catch(error => {
-      });
+    }).catch(error => {
+    });
 }
 
 export default client;

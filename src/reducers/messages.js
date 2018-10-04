@@ -5,6 +5,7 @@ const messages = (state = [], action) => {
         {
           message: action.message,
           author: action.author,
+          fresh: action.fresh,
           id: action.id,
         },  
         ...state,
@@ -15,10 +16,15 @@ const messages = (state = [], action) => {
         {
           message: action.message,
           author: action.author,
+          fresh: action.fresh,
           id: action.id,
-        },
-        
+        },       
       ]
+    case 'DELETE_MESSAGE':
+      return [
+          ...state.slice(0, state.length - 1)
+      ]
+      
     case 'UNLOAD_MESSAGE':
       return [
         
@@ -28,6 +34,7 @@ const messages = (state = [], action) => {
         {
           message: action.message,
           author: action.author,
+          fresh: action.fresh,
           id: action.id,
         },
       ]);

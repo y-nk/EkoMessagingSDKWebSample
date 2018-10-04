@@ -2,11 +2,12 @@ let nextMessageId = 0;
 let nextUserId = 0;
 let nextChannelId = 0;
 
-export const addMessage = (message, author) => ({
+export const addMessage = (message, author, fresh=false) => ({
   type: 'ADD_MESSAGE',
   id: nextMessageId++,
   message,
   author,
+  fresh,
 });
 
 export const loadMessage = (message, author) => ({
@@ -14,7 +15,12 @@ export const loadMessage = (message, author) => ({
   id: nextMessageId++,
   message,
   author,
+  fresh: true,
 });
+
+export const deleteMessage = () => ({
+  type: 'DELETE_MESSAGE',
+})
 
 export const unloadMessage = () => ({
   type: 'UNLOAD_MESSAGE',

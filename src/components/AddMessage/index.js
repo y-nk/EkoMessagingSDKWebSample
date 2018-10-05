@@ -8,16 +8,16 @@ class AddMessage extends Component {
       channelId: Channel,
       text: Message,
     });
-
+    this.props.addMessage(Message, this.props.user[0].name);
     messageLiveObject.on('dataStatusChanged', data => {
       console.log(`Message sent`);
-      this.props.addMessage(Message, this.props.user[0].name);
+      this.props.deleteMessage();
+      this.props.addMessage(Message, this.props.user[0].name, true);
     });
   }
   updateMessages = (Value) => {
     const messages = messageRepo.messagesForChannel({ channelId: Value });
     messages.on('dataUpdated', data => {
-      console.log(data)
       data.map(message =>
         this.props.loadMessage(message.data.text, message.userId)
       );

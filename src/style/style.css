@@ -144,15 +144,20 @@ ul {
 #message span.message-bubble {
   display: inline-block;
   border-radius: 4px;
-  padding: 6px 16px;
+  padding: 6px 28px 6px 16px;
+  position: relative;
   margin-top: 4px;
   color: #404040;
   -webkit-text-align: left;
   text-align: left;
   max-width: 60%;
   border: 1px solid rgb(218, 218, 218);
-  background-color: #E4F8E6;
+  background-color: #F1F1F1;
   margin-left: 3px;
+}
+
+#message.fresh span.message-bubble {
+  background-color: #E4F8E6;
 }
 
 .infinite-scroll-component {
@@ -162,4 +167,13 @@ ul {
 
 .active {
    background-color: #F0F2F4;
+}
+
+.lnr-check:before {
+  content: "\e934";
+  color: #828282;
+  font-size: 10px;
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
 }

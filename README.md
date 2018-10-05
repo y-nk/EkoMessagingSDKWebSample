@@ -23,4 +23,4 @@ npm run start
 You can find more documentation of the Eko Web SDK here:
 
 * [Eko Web SDK Official Documentation](https://docs.ekomedia.technology/web/start)
-* [Eko Web SDK API Reference](https://docs.ekomedia.technology/web/start)
+* [Eko Web SDK API Reference](https://docs.ekomedia.technology/web/start) (Coming-Soon)

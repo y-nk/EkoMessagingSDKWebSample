@@ -6,15 +6,30 @@ This application is designed to showcase our Eko Web SDK. Through this applicati
 
 After cloning the github repo, you need to install the relevant node modules.
 
-```javascript
+```
 npm install
 ```
+
+## Configurations
+
+To run successfully the Sample Application requires additional configuration.
+1) Navigate inside `src` folder:
+```
+cd src
+```
+
+2) Then copy `sdk-config.example.js` into `sdk-config.js`:
+```
+cp sdk-config.example.js sdk-config.js
+```
+
+3) Open `sdk-config.js` file by your editor and edit required fields
 
 ## Running Application
 
 To run the application, simply run start.
 
-```javascript
+```
 npm run start
 ```
 
@@ -23,4 +38,4 @@ npm run start
 You can find more documentation of the Eko Web SDK here:
 
 * [Eko Web SDK Official Documentation](https://docs.ekomedia.technology/web/start)
-* [Eko Web SDK API Reference](https://docs.ekomedia.technology/web/start) (Coming-Soon)
+* [Eko Web SDK API Reference](https://ekocommunications.github.io/EkoMessagingSDKDocs/web/module-eko-sdk.html)

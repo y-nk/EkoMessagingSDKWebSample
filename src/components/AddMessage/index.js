@@ -15,15 +15,7 @@ class AddMessage extends Component {
       this.props.addMessage(Message, this.props.user[0].name, true);
     });
   }
-  updateMessages = (Value) => {
-    const messages = messageRepo.messagesForChannel({ channelId: Value });
-    messages.on('dataUpdated', data => {
-      data.map(message =>
-        this.props.loadMessage(message.data.text, message.userId)
-      );
-      messages.removeAllListeners('dataUpdated');
-    });
-  }
+
   render() {
     let input;
     return (

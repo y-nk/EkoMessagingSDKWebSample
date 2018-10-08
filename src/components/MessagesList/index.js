@@ -4,7 +4,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { messageRepo } from '../../EkoSDK';
 
 class MessagesList extends Component {
-  onScrollToBottom = async () => {
+  onScrollToTop = async () => {
     const messages = messageRepo.messagesForChannel({ channelId: this.props.currentChannel });
     await new Promise(resolve => messages.once('loadingStatusChanged', resolve));
     if (messages.hasMore) {
@@ -29,7 +29,7 @@ class MessagesList extends Component {
       <InfiniteScroll
         dataLength={this.props.messages.length}
         height={500}
-        next={this.onScrollToBottom}
+        next={this.onScrollToTop}
         hasMore={false}
       >
         <ul id="message-list">

@@ -5,6 +5,7 @@ import { setChannel, setCurrentChannel, unloadMessage, loadMessage } from '../ac
 export const AddChannel = connect(
   state => ({
     currentChannel: state.currentChannel,
+    channels: state.channels,
   }),
   dispatch => ({
     loadMessage: (message, author) => dispatch(loadMessage(message, author)),

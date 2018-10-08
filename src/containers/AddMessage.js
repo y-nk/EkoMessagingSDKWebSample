@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import AddMessageComponent from '../components/AddMessage';
-import { addMessage } from '../actions';
+import { addMessage, deleteMessage } from '../actions';
 
 export const AddMessage = connect(
   state => ({
@@ -8,6 +8,7 @@ export const AddMessage = connect(
     currentChannel: state.currentChannel,
   }),
   dispatch => ({
-    addMessage: (message, author) => dispatch(addMessage(message, author)),
+    addMessage: (message, author, fresh) => dispatch(addMessage(message, author, fresh)),
+    deleteMessage: () => dispatch(deleteMessage()),
   }),
 )(AddMessageComponent)

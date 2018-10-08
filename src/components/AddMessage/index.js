@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { sendMessage } from '../../EkoSDK';
+import { messageRepo } from '../../EkoSDK';
 
 class AddMessage extends Component {
+  sendMessage = (Message, Channel) => {
+    const messageLiveObject = messageRepo.createTextMessage({
+      channelId: Channel,
+      text: Message,
+    });
+    this.props.addMessage(Message, this.props.user[0].name);
+    messageLiveObject.on('dataStatusChanged', data => {
+      console.log(`Message sent`);
+      this.props.deleteMessage();
+      this.props.addMessage(Message, this.props.user[0].name, true);
+    });
+  }
+
   render() {
     let input;
     return (
@@ -10,8 +23,7 @@ class AddMessage extends Component {
         <input placeholder="Type your message..."
           onKeyPress={e => {
             if (e.key === 'Enter' && input.value !== '') {
-              this.props.addMessage(input.value, this.props.user[0].name);
-              sendMessage(input.value, this.props.currentChannel);
+              this.sendMessage(input.value, this.props.currentChannel);
               input.value = '';
             }
           }}
@@ -22,8 +34,7 @@ class AddMessage extends Component {
         />
         <button type="submit" onClick={() => {
           if (input.value !== '') {
-            this.props.addMessage(input.value, this.props.user[0].name);
-            sendMessage(input.value, this.props.currentChannel);
+            this.sendMessage(input.value, this.props.currentChannel);
             input.value = '';
           }
         }

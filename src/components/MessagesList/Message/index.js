@@ -4,15 +4,13 @@ class Message extends Component {
   render() {
     return (
       <div id="message" className={this.props.fresh ? 'fresh' : ''}>
-        <span className="title">{this.props.author}:</span>
-        <p><span className="message-bubble">{this.props.message}
+        <span className="title">{this.props.user}:</span>
+        <p><span className="message-bubble">{this.props.text}
         {this.props.fresh ?
           <i className="lnr-check"></i>
           :
           ''
-        }
-        </span></p>
-        
+        }</span></p>
       </div>
     );
   };

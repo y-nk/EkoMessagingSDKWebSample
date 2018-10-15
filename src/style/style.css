@@ -62,6 +62,8 @@
 }
 
 #message-list {
+  display: flex;
+  flex-direction: column-reverse;
   padding: 0 20px;
 }
 
@@ -158,11 +160,6 @@ ul {
 
 #message.fresh span.message-bubble {
   background-color: #E4F8E6;
-}
-
-.infinite-scroll-component {
-  display: flex;
-  flex-direction: column-reverse;
 }
 
 .active {

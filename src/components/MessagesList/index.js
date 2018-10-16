@@ -12,7 +12,7 @@ class MessagesList extends Component {
     this.messageRepo = new MessageRepository();
     this.state = {
       messages: [],
-      hasMore: false,
+      canLoadMore: false,
     };
   }
 
@@ -24,7 +24,7 @@ class MessagesList extends Component {
     if (props.currentChannelId !== state.prevChannelId) {
       return {
         messages: [],
-        hasMore: false,
+        canLoadMore: false,
         prevChannelId: props.currentChannelId,
       };
     }
@@ -47,7 +47,6 @@ class MessagesList extends Component {
     this.messageCollection && this.messageCollection.dispose();
     // Get messages in selected Channel
     this.messageCollection = this.messageRepo.messagesForChannel({ channelId: this.props.currentChannelId });
-    console.log(1, this.messageCollection)
 
     // Once message data is received, run the following code.
     this.messageCollection.on('dataUpdated', data => {
@@ -56,24 +55,21 @@ class MessagesList extends Component {
 
     this.messageCollection.on('loadingStatusChanged', ({ newValue }) => {
       if (newValue === EkoLoadingStatus.Loaded) {
-        this.setState({ hasMore: this.messageCollection.hasMore });
+        this.setState({ canLoadMore: this.messageCollection.hasMore });
+      } else {
+        this.setState({ canLoadMore: false });
       }
     });
-  }
-
-  loadMore = () => {
-    if (this.state.hasMore) {
-      this.messageCollection.nextPage();
-    }
   }
 
   render() {
     return (
       <div id="message-infinite-scroll-wrapper">
         <InfiniteScroll
-          loadMore={() => this.state.hasMore && this.messageCollection.nextPage()}
-          hasMore={this.state.hasMore}
+          loadMore={() => this.state.canLoadMore && this.messageCollection.nextPage()}
+          hasMore={this.state.canLoadMore}
           useWindow={false}
+          loader={<span key={0}>Loading</span>}
           isReverse
         >
           <ul id="message-list">

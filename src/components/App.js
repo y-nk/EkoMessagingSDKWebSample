@@ -18,18 +18,16 @@ const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });
 // Register Session with EkoClient with userId and display name
 client.registerSession({ userId: 'jenya1', displayName: 'Jenya1' });
 
+
 class App extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      channels: [
-        'newChannel',
-        'ANDROID',
-        'public_eko',
-      ],
-      currentUser: '',
-      currentChannelId: undefined,
-    }
+  state = {
+    channels: [
+      'newChannel',
+      'ANDROID',
+      'public_eko',
+    ],
+    currentUser: '',
+    currentChannelId: undefined,
   }
 
   componentDidMount() {

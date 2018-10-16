@@ -57,14 +57,24 @@
 }
 
 #right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   width: 100%;
-  display: inline-block;
 }
 
 #message-list {
   display: flex;
   flex-direction: column-reverse;
+  margin: 0;
   padding: 0 20px;
+}
+
+#message-infinite-scroll-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: auto;
+  height: 500px;
 }
 
 #new-message {

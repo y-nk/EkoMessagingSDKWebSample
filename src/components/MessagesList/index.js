@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroller';
 import { MessageRepository, EkoLoadingStatus } from 'eko-sdk';
 
 import Message from './Message'
@@ -55,11 +55,8 @@ class MessagesList extends Component {
     });
 
     this.messageCollection.on('loadingStatusChanged', ({ newValue }) => {
-      console.log(2, EkoLoadingStatus.Loaded);
       if (newValue === EkoLoadingStatus.Loaded) {
-        console.log(3);
         this.setState({ hasMore: this.messageCollection.hasMore });
-        console.log(4, this.messageCollection.hasMore);
       }
     });
   }
@@ -72,21 +69,23 @@ class MessagesList extends Component {
 
   render() {
     return (
-      <InfiniteScroll
-        dataLength={this.state.messages.length}
-        height={500}
-        next={this.loadMore}
-        hasMore={this.state.hasMore}
-      >
-        <ul id="message-list">
-          {this.state.messages.map(message => (
-            <Message
-              key={message.messageId}
-              {...message}
-            />
-          ))}
-        </ul>
-      </InfiniteScroll>
+      <div id="message-infinite-scroll-wrapper">
+        <InfiniteScroll
+          loadMore={() => this.state.hasMore && this.messageCollection.nextPage()}
+          hasMore={this.state.hasMore}
+          useWindow={false}
+          isReverse
+        >
+          <ul id="message-list">
+            {this.state.messages.map(message => (
+              <Message
+                key={message.messageId}
+                {...message}
+              />
+            ))}
+          </ul>
+        </InfiniteScroll>
+      </div>
     );
   };
 };

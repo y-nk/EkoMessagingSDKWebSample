@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { EkoSyncState } from 'eko-sdk';
 
-class Message extends Component {
-  render() {
-    return (
-      <div id="message" className={this.props.fresh ? 'fresh' : ''}>
-        <span className="title">{this.props.author}:</span>
-        <p><span className="message-bubble">{this.props.message}
-        {this.props.fresh ?
+
+const Message = ({ userId, data, syncState }) => (
+  <div
+    id="message"
+    className={syncState === EkoSyncState.Synced ? 'fresh' : ''}
+  >
+    <span className="title">{userId}:</span>
+    <p>
+      <span className="message-bubble">{data.text}
+        {syncState === EkoSyncState.Synced && (
           <i className="lnr-check"></i>
-          :
-          ''
-        }
-        </span></p>
-        
-      </div>
-    );
-  };
-};
+        )}
+      </span>
+    </p>
+  </div>
+);
 
 export default Message;

@@ -3,7 +3,6 @@ import EkoClient, {
   MessageRepository,
   ChannelRepository,
   EkoChannelType,
-  EkoConnectionStatus
 } from 'eko-sdk';
 
 import SdkConfig from './../sdk-config';
@@ -26,26 +25,17 @@ class App extends PureComponent {
       'ANDROID',
       'public_eko',
     ],
-    currentUser: '',
-    currentChannelId: undefined,
+    currentChannelId: 'newChannel',
   }
 
   componentDidMount() {
-    // NOTE: Data requests should be made only once connection has been established
-    client.on('connectionStatusChanged', ({ newValue, oldValue }) => {
-      // Check if Connection Status is Connected
-      if (newValue === EkoConnectionStatus.Connected) {
-        this.setState({ currentChannelId: 'newChannel' });
-        // Establish current user
-        const currentUser = client.currentUser;
-        // On current user data update, run the following code.
-        currentUser.on('dataUpdated', model => {
-          // Show current user and display name
-          this.setState({ currentUser: model.userId});
-          console.log(`Current user: ${model.userId}, Display Name: ${model.displayName}`);
-        });
-      }
-    })
+    // Establish current user (only for demo purpose)
+    const currentUser = client.currentUser;
+
+    // On current user data update, run the following code.
+    currentUser.on('dataUpdated', model => {
+      console.log(`Current user: ${model.userId}, Display Name: ${model.displayName}`);
+    });
   }
 
   componentWillUnmount() {
@@ -62,7 +52,7 @@ class App extends PureComponent {
 
   // Add channel to local state
   addChannel = (Channel) => {
-      this.setState({ channels: [...this.state.channels, Channel ] })
+    this.setState({ channels: [...this.state.channels, Channel ] })
   }
 
   // Join selected Channel

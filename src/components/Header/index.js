@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Header extends Component {
-  render() {
-    return (
-      <div id="header">
-        <h1>eko-SDK Demo App</h1>
-      </div>
-    );
-  };
-};
+const Header = () => (
+  <div id="header">
+    <h1>eko-sdk Sample App</h1>
+  </div>
+);
 
 export default Header;

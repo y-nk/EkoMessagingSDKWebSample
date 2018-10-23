@@ -63,17 +63,19 @@ class MessagesList extends Component {
   }
 
   render() {
+    const { canLoadMore, messages } = this.state;
+
     return (
       <div id="message-infinite-scroll-wrapper">
         <InfiniteScroll
-          loadMore={() => this.state.canLoadMore && this.messageCollection.nextPage()}
-          hasMore={this.state.canLoadMore}
+          loadMore={() => canLoadMore && this.messageCollection.nextPage()}
+          hasMore={canLoadMore}
           useWindow={false}
           loader={<span key={0}>Loading</span>}
           isReverse
         >
           <ul id="message-list">
-            {this.state.messages.map(message => (
+            {messages.map(message => (
               <Message
                 key={message.messageId}
                 {...message}

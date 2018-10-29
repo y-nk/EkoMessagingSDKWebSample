@@ -1,6 +1,6 @@
 {
   "name": "EkoMessagingSDKWebSample",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "dependencies": {
     "antd": "^3.4.0",
@@ -14,7 +14,7 @@
     "date-fns": "^1.29.0",
     "dotenv": "4.0.0",
     "dotenv-expand": "4.2.0",
-    "eko-sdk": "^0.10.1",
+    "eko-sdk": "^0.11.0-rc1",
     "eslint": "4.10.0",
     "eslint-config-react-app": "^2.1.0",
     "eslint-loader": "1.9.0",

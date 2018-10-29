@@ -15,7 +15,10 @@ import Header from './Header';
 // Connect to EkoClient with apiKey
 const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });
 // Register Session with EkoClient with userId and display name
-client.registerSession({ userId: 'jenya1', displayName: 'Jenya1' });
+client.registerSession({
+  userId: SdkConfig.DEFAULT_USER.USER_ID,
+  displayName: SdkConfig.DEFAULT_USER.DISPLAY_NAME,
+});
 
 
 class App extends PureComponent {

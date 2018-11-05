@@ -13,14 +13,16 @@ const ChannelList = ({ channels, currentChannelId, joinChannel }) => {
     <ul>
       {channels.map(channel => (
         <div
-          className={`channel-tab ${isActive(channel.id)}`}
-          key={channel.id}
-          onClick={() => joinChannel(channel.id)}
+          className={`channel-tab ${isActive(channel.channelId)}`}
+          key={channel.channelId}
+          onClick={() => joinChannel(channel.channelId)}
         >
-          <p>{channel.id}</p>
-          {channel.tags.map(tag => (
+          <p>{channel.channelId}</p>
+          {channel.tags ? channel.tags.map(tag => (
             <Tag key={tag}>{tag}</Tag>
-          ))}
+          ))
+            :
+            ''}
         </div>
       ))}
     </ul>

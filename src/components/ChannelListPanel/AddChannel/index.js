@@ -8,7 +8,7 @@ class AddChannel extends Component {
         <input placeholder="Add Channel"
           onKeyPress={e => {
             if (e.key === 'Enter' && input.value !== '') {
-              if (!(this.props.existingChannel(input.value, this.props.channels))) {
+              if (!(this.props.existingChannel(input.value, this.props.demoChannels))) {
                 this.props.addChannel(input.value)
                 this.props.joinChannel(input.value)
                 input.value = '';

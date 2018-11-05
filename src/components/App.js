@@ -72,32 +72,28 @@ class App extends PureComponent {
   }
 
   // Add channel to local state
-  addChannel = (Channel) => {
+  addChannel = channelId => {
     this.setState({
       channels: [...this.state.channels,
       {
-        id: Channel,
+        id: channelId,
         tags: []
       }]
     })
   }
 
   // Join selected Channel
-  joinChannel = (Channel) => {
+  joinChannel = async channelId => {
     // Instantiate Channel Repository
     const channelRepo = new ChannelRepository();
     // Join Channel
-    const liveChannel = channelRepo.joinChannel({
-      channelId: Channel,
+    await channelRepo.joinChannel({
+      channelId: channelId,
       type: EkoChannelType.Standard,
     });
-    // Once Channel has been joined, run the following code.
-    liveChannel.once('dataUpdated', model => {
-      this.setState({
-        currentChannelId: model.channelId,
-      })
-      console.log(`Channel joined: ${model.channelId}`);
-    });
+    this.setState({
+      currentChannelId: channelId
+    })
   }
 
   // Send message in Channel
@@ -123,6 +119,7 @@ class App extends PureComponent {
           <div id="left">
             <ChannelListPanel
               channels={this.state.channels}
+              demoChannels={this.state.demoChannels}
               currentChannelId={this.state.currentChannelId}
               addChannel={this.addChannel}
               existingChannel={this.existingChannel}

@@ -39,14 +39,17 @@ class App extends PureComponent {
     // Establish current user (only for demo purpose)
     const currentUser = client.currentUser;
 
-    // On current user data update, run the following code.
+    // On current user data update, run the following code
     currentUser.on('dataUpdated', model => {
       console.log(`Current user: ${model.userId}, Display Name: ${model.displayName}`);
     });
 
-    const channelRepo = new ChannelRepository();
+    // Get channel tags for each channel
     this.state.demoChannels.map(channel => {
+      // Instantiate new Channel Repository
+      const channelRepo = new ChannelRepository();
       const liveChannel = channelRepo.channelForId(channel);
+      // On dataUpdated, retrieve the tags for the channel
       return liveChannel.once('dataUpdated', data => (
         this.setState({
           channels: [...this.state.channels,

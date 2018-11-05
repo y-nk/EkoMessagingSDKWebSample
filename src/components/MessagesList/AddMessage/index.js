@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 class AddMessage extends Component {
-
   render() {
     let input;
     const { 

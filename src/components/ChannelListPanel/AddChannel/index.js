@@ -3,14 +3,20 @@ import React, { Component } from 'react';
 class AddChannel extends Component {
   render() {
     let input;
+    const {
+      existingChannel,
+      demoChannels,
+      addChannel,
+      joinChannel
+    } = this.props
     return (
       <section id="add-channel">
         <input placeholder="Add Channel"
           onKeyPress={e => {
             if (e.key === 'Enter' && input.value !== '') {
-              if (!(this.props.existingChannel(input.value, this.props.demoChannels))) {
-                this.props.addChannel(input.value)
-                this.props.joinChannel(input.value)
+              if (!(existingChannel(input.value, demoChannels))) {
+                addChannel(input.value)
+                joinChannel(input.value)
                 input.value = '';
               }
             }

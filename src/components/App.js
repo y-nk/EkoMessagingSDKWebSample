@@ -1,3 +1,5 @@
+import 'antd/dist/antd.css';
+
 import React, { PureComponent } from 'react';
 import EkoClient, {
   MessageRepository,
@@ -12,6 +14,7 @@ import AddMessage from './MessagesList/AddMessage';
 import Header from './Header';
 
 
+
 // Connect to EkoClient with apiKey
 const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });
 // Register Session with EkoClient with userId and display name
@@ -23,11 +26,12 @@ client.registerSession({
 
 class App extends PureComponent {
   state = {
-    channels: [
+    demoChannels: [
       'newChannel',
       'ANDROID',
       'public_eko',
     ],
+    channels: [],
     currentChannelId: 'newChannel',
   }
 
@@ -38,6 +42,20 @@ class App extends PureComponent {
     // On current user data update, run the following code.
     currentUser.on('dataUpdated', model => {
       console.log(`Current user: ${model.userId}, Display Name: ${model.displayName}`);
+    });
+
+    const channelRepo = new ChannelRepository();
+    this.state.demoChannels.map(channel => {
+      const liveChannel = channelRepo.channelForId(channel);
+      return liveChannel.once('dataUpdated', data => (
+        this.setState({
+          channels: [...this.state.channels,
+          {
+            id: data.channelId,
+            tags: data.tags
+          }]
+        })
+      ))
     });
   }
 
@@ -55,7 +73,13 @@ class App extends PureComponent {
 
   // Add channel to local state
   addChannel = (Channel) => {
-    this.setState({ channels: [...this.state.channels, Channel ] })
+    this.setState({
+      channels: [...this.state.channels,
+      {
+        id: Channel,
+        tags: []
+      }]
+    })
   }
 
   // Join selected Channel
@@ -69,7 +93,9 @@ class App extends PureComponent {
     });
     // Once Channel has been joined, run the following code.
     liveChannel.once('dataUpdated', model => {
-      this.setState({ currentChannelId: model.channelId })
+      this.setState({
+        currentChannelId: model.channelId,
+      })
       console.log(`Channel joined: ${model.channelId}`);
     });
   }
@@ -97,7 +123,7 @@ class App extends PureComponent {
           <div id="left">
             <ChannelListPanel
               channels={this.state.channels}
-              currentChannel={this.state.currentChannelId}
+              currentChannelId={this.state.currentChannelId}
               addChannel={this.addChannel}
               existingChannel={this.existingChannel}
               joinChannel={this.joinChannel}
@@ -109,7 +135,7 @@ class App extends PureComponent {
             )}
             <AddMessage
               sendMessage={this.sendMessage}
-              currentChannel={this.state.currentChannelId}
+              currentChannelId={this.state.currentChannelId}
             />
           </div>
         </div>

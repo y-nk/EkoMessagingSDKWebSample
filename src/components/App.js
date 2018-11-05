@@ -1,3 +1,5 @@
+import 'antd/dist/antd.css';
+
 import React, { PureComponent } from 'react';
 import EkoClient, {
   MessageRepository,
@@ -12,6 +14,7 @@ import AddMessage from './MessagesList/AddMessage';
 import Header from './Header';
 
 
+
 // Connect to EkoClient with apiKey
 const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });
 // Register Session with EkoClient with userId and display name
@@ -20,14 +23,16 @@ client.registerSession({
   displayName: SdkConfig.DEFAULT_USER.DISPLAY_NAME,
 });
 
+// Set up static channels
+const staticChanelIdsList = [
+  'newChannel',
+  'ANDROID',
+  'public_eko',
+]
 
 class App extends PureComponent {
   state = {
-    channels: [
-      'newChannel',
-      'ANDROID',
-      'public_eko',
-    ],
+    channels: [],
     currentChannelId: 'newChannel',
   }
 
@@ -35,9 +40,23 @@ class App extends PureComponent {
     // Establish current user (only for demo purpose)
     const currentUser = client.currentUser;
 
-    // On current user data update, run the following code.
+    // On current user data update, run the following code
     currentUser.on('dataUpdated', model => {
       console.log(`Current user: ${model.userId}, Display Name: ${model.displayName}`);
+    });
+
+    // Get channel tags for each channel
+    staticChanelIdsList.map(channel => {
+      // Instantiate new Channel Repository
+      const channelRepo = new ChannelRepository();
+      const liveChannel = channelRepo.channelForId(channel);
+      // On dataUpdated, retrieve the tags for the channel
+      return liveChannel.once('dataUpdated', data => {
+        this.setState({
+          channels: [...this.state.channels, ...[data]]
+        })
+        liveChannel.dispose()
+      })
     });
   }
 
@@ -47,31 +66,34 @@ class App extends PureComponent {
   }
 
   // Check if channel does not already exist
-  existingChannel = (Value, ChannelArray) => {
-    ChannelArray.some(channel =>
-      channel.toLowerCase() === Value.toLowerCase()
-    )
-  }
+  existingChannel = (value, channels) => (
+    channels.some(channel => channel.channelId.toLowerCase() === value.toLowerCase())
+ )
 
   // Add channel to local state
-  addChannel = (Channel) => {
-    this.setState({ channels: [...this.state.channels, Channel ] })
+  addChannel = channelId => {
+    const channelRepo = new ChannelRepository();
+    const liveChannel = channelRepo.channelForId(channelId);
+    return liveChannel.once('dataUpdated', data => {
+      this.setState({
+        channels: [...this.state.channels, ...[data]]
+      })
+      liveChannel.dispose()
+    })
   }
 
   // Join selected Channel
-  joinChannel = (Channel) => {
+  joinChannel = channelId => {
     // Instantiate Channel Repository
     const channelRepo = new ChannelRepository();
     // Join Channel
-    const liveChannel = channelRepo.joinChannel({
-      channelId: Channel,
+    channelRepo.joinChannel({
+      channelId,
       type: EkoChannelType.Standard,
     });
-    // Once Channel has been joined, run the following code.
-    liveChannel.once('dataUpdated', model => {
-      this.setState({ currentChannelId: model.channelId })
-      console.log(`Channel joined: ${model.channelId}`);
-    });
+    this.setState({
+      currentChannelId: channelId
+    })
   }
 
   // Send message in Channel
@@ -97,7 +119,7 @@ class App extends PureComponent {
           <div id="left">
             <ChannelListPanel
               channels={this.state.channels}
-              currentChannel={this.state.currentChannelId}
+              currentChannelId={this.state.currentChannelId}
               addChannel={this.addChannel}
               existingChannel={this.existingChannel}
               joinChannel={this.joinChannel}
@@ -109,7 +131,7 @@ class App extends PureComponent {
             )}
             <AddMessage
               sendMessage={this.sendMessage}
-              currentChannel={this.state.currentChannelId}
+              currentChannelId={this.state.currentChannelId}
             />
           </div>
         </div>

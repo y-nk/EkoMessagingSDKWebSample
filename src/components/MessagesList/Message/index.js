@@ -3,7 +3,6 @@ import { EkoSyncState } from 'eko-sdk';
 
 
 const Message = ({ user, data, syncState }) => {
-  console.log(user);
   const userTitle = user && user.model ?
     `${user.model.userId}${user.model.displayName ? ` (${user.model.displayName})` : ''}` :
     'Loading...';

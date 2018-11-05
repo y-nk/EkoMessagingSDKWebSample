@@ -14,7 +14,7 @@ const ChannelListPanel = props => (
     <ChannelList
       channels={props.channels}
       joinChannel={props.joinChannel}
-      currentChannel={props.currentChannel}
+      currentChannelId={props.currentChannelId}
     />
   </div>
 );

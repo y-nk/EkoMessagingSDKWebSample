@@ -23,6 +23,12 @@ client.registerSession({
   displayName: SdkConfig.DEFAULT_USER.DISPLAY_NAME,
 });
 
+// Set up static channels
+const staticChanelIdsList = [
+  'newChannel',
+  'ANDROID',
+  'public_eko',
+]
 
 class App extends PureComponent {
   state = {
@@ -39,12 +45,6 @@ class App extends PureComponent {
       console.log(`Current user: ${model.userId}, Display Name: ${model.displayName}`);
     });
 
-    // Set up static channels
-    const staticChanelIdsList = [
-      'newChannel',
-      'ANDROID',
-      'public_eko',
-    ]
     // Get channel tags for each channel
     staticChanelIdsList.map(channel => {
       // Instantiate new Channel Repository
@@ -66,26 +66,20 @@ class App extends PureComponent {
   }
 
   // Check if channel does not already exist
-  existingChannel = (value, channelArray) => {
-    const channelIds = []
-    channelArray.map(channel => (
-      channelIds.push(channel.channelId)
-      ))
-    channelIds.some(channel =>
-      channel.toLowerCase() === value.toLowerCase()
-    )
-  }
+  existingChannel = (value, channels) => (
+    channels.some(channel => channel.channelId.toLowerCase() === value.toLowerCase())
+ )
 
   // Add channel to local state
   addChannel = channelId => {
     const channelRepo = new ChannelRepository();
-      const liveChannel = channelRepo.channelForId(channelId);
-      return liveChannel.once('dataUpdated', data => {
-        this.setState({
-          channels: [...this.state.channels, ...[data]]
-        })
-        liveChannel.dispose()
+    const liveChannel = channelRepo.channelForId(channelId);
+    return liveChannel.once('dataUpdated', data => {
+      this.setState({
+        channels: [...this.state.channels, ...[data]]
       })
+      liveChannel.dispose()
+    })
   }
 
   // Join selected Channel
@@ -94,7 +88,7 @@ class App extends PureComponent {
     const channelRepo = new ChannelRepository();
     // Join Channel
     channelRepo.joinChannel({
-      channelId: channelId,
+      channelId,
       type: EkoChannelType.Standard,
     });
     this.setState({

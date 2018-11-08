@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 
 class AddMessage extends Component {
-
   render() {
     let input;
+    const { 
+      currentChannelId,
+      sendMessage,
+     } = this.props
     return (
       <section id="new-message">
         <input placeholder="Type your message..."
           onKeyPress={e => {
             if (e.key === 'Enter' && input.value !== '') {
-              this.props.sendMessage(input.value, this.props.currentChannel)
+              sendMessage(input.value, currentChannelId)
               input.value = '';
             }
           }}
@@ -20,7 +23,7 @@ class AddMessage extends Component {
         />
         <button type="submit" onClick={() => {
           if (input.value !== '') {
-            this.props.sendMessage(input.value, this.props.currentChannel)
+            sendMessage(input.value, currentChannelId)
             input.value = '';
           }
         }

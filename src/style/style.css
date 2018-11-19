@@ -49,7 +49,7 @@
 }
 
 #left {
-  width: 170px;
+  width: 200px;
   display: inline-block;
   background-color: #fff;
   border-right: 1px solid #ECECEC;
@@ -109,7 +109,7 @@
 }
 
 #channels {
-  min-width: 170px;
+  min-width: 200px;
 }
 
 #channels ul {
@@ -119,10 +119,16 @@
 
 #channels ul .channel-tab {
   border-bottom: 1px solid #E6E6E6;
-  padding: 30px 20px;
+  padding: 20px 20px;
   text-align: center;
   cursor: pointer;
   margin: 0;
+}
+
+#channels ul .channel-tab .member-count {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 12px;
 }
 
 #add-channel {

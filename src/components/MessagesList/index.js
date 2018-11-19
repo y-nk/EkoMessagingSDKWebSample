@@ -18,7 +18,6 @@ class MessagesList extends Component {
 
   componentDidMount() {
     this.resetMessageCollection();
-    console.log('hey');
   }
 
   static getDerivedStateFromProps(props, state) {

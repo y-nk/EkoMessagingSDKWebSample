@@ -81,8 +81,6 @@ class App extends PureComponent {
 
   // Join selected Channel
   joinChannel = channelId => {
-    // Instantiate Channel Repository
-    const channelRepo = new ChannelRepository();
     // Join Channel
     channelRepo.joinChannel({
       channelId,

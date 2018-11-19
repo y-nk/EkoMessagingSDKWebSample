@@ -18,11 +18,10 @@ const ChannelList = ({ channels, currentChannelId, joinChannel }) => {
           onClick={() => joinChannel(channel.channelId)}
         >
           <p>{channel.channelId}</p>
-          {channel.tags ? channel.tags.map(tag => (
-            <Tag key={tag}>{tag}</Tag>
-          ))
-            :
-            ''}
+          {channel.tags && channel.tags.map((tag, index) => (
+            <Tag key={index}>{tag}</Tag>
+          ))}
+          <p className="member-count">Member count: <b>{channel.memberCount}</b></p>
         </div>
       ))}
     </ul>

@@ -22,6 +22,7 @@ client.registerSession({
   userId: SdkConfig.DEFAULT_USER.USER_ID,
   displayName: SdkConfig.DEFAULT_USER.DISPLAY_NAME,
 });
+const channelRepo = new ChannelRepository();
 
 // Set up static channels
 const staticChanelIdsList = [
@@ -46,23 +47,9 @@ class App extends PureComponent {
     });
 
     // Get channel tags for each channel
-    staticChanelIdsList.map(channel => {
-      // Instantiate new Channel Repository
-      const channelRepo = new ChannelRepository();
-      const liveChannel = channelRepo.channelForId(channel);
-      // On dataUpdated, retrieve the tags for the channel
-      return liveChannel.once('dataUpdated', data => {
-        this.setState({
-          channels: [...this.state.channels, ...[data]]
-        })
-        liveChannel.dispose()
-      })
+    staticChanelIdsList.forEach(channelId => {
+      this.addChannel(channelId);
     });
-  }
-
-  componentWillUnmount() {
-    // Dispose connection
-    client.removeAllListeners('connectionStatusChanged');
   }
 
   // Check if channel does not already exist
@@ -72,20 +59,28 @@ class App extends PureComponent {
 
   // Add channel to local state
   addChannel = channelId => {
-    const channelRepo = new ChannelRepository();
     const liveChannel = channelRepo.channelForId(channelId);
-    return liveChannel.once('dataUpdated', data => {
-      this.setState({
-        channels: [...this.state.channels, ...[data]]
-      })
-      liveChannel.dispose()
-    })
+    // On dataUpdated, retrieve the tags for the channel
+    liveChannel.on('dataUpdated', data => {
+      const channelIndex = this.state.channels.findIndex(channel => (channel.channelId === data.channelId));
+      if (channelIndex === -1) {
+        this.setState({
+          channels: [...this.state.channels, ...[data]]
+        });
+      } else {
+        this.setState({
+          channels: [
+            ...this.state.channels.slice(0, channelIndex),
+            { ...this.state.channels[channelIndex], ...data },
+            ...this.state.channels.slice(channelIndex + 1),
+          ]
+        });
+      }
+    });
   }
 
   // Join selected Channel
   joinChannel = channelId => {
-    // Instantiate Channel Repository
-    const channelRepo = new ChannelRepository();
     // Join Channel
     channelRepo.joinChannel({
       channelId,

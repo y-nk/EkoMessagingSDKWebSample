@@ -1,17 +1,18 @@
 @font-face {
-  font-family: 'Linearicons';
-  src:  url('fonts/Linearicons.eot?kr0kvi');
-  src:  url('fonts/Linearicons.eot?kr0kvi#iefix') format('embedded-opentype'),
-    url('fonts/Linearicons.ttf?kr0kvi') format('truetype'),
-    url('fonts/Linearicons.woff?kr0kvi') format('woff'),
-    url('fonts/Linearicons.svg?kr0kvi#Linearicons') format('svg');
+  font-family: "Linearicons";
+  src: url("fonts/Linearicons.eot?kr0kvi");
+  src: url("fonts/Linearicons.eot?kr0kvi#iefix") format("embedded-opentype"),
+    url("fonts/Linearicons.ttf?kr0kvi") format("truetype"),
+    url("fonts/Linearicons.woff?kr0kvi") format("woff"),
+    url("fonts/Linearicons.svg?kr0kvi#Linearicons") format("svg");
   font-weight: normal;
   font-style: normal;
 }
 
-[class^="lnr-"], [class*=" lnr-"] {
+[class^="lnr-"],
+[class*=" lnr-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'Linearicons' !important;
+  font-family: "Linearicons" !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -25,41 +26,30 @@
 }
 
 #container {
-  margin: 2%;
-  width: 96%;
-  border: 1px solid #ECECEC;
+  height: 100%;
+  width: 100%;
   background-color: #f9f9f9;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
-}
-
-#header {
-  background: #001529;
-  padding: 30px 30px 10px 30px;
-  display: flex;
-  align-items: center;
-}
-
-#header h1 {
-  font-size: 22px;
-  color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 }
 
 .row {
   display: flex;
+  height: calc(100vh - 50px);
 }
 
 #left {
-  width: 200px;
+  width: 280px;
   display: inline-block;
   background-color: #fff;
-  border-right: 1px solid #ECECEC;
+  border-right: 1px solid #ececec;
+  overflow: scroll;
 }
 
 #right {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 100%;
+  width: calc(100% - 280px);
 }
 
 #message-list {
@@ -73,12 +63,12 @@
   display: flex;
   flex-direction: column-reverse;
   overflow: auto;
-  height: 500px;
+  height: calc(100vh - 50px);
 }
 
 #new-message {
-  border-top: 1px solid #E6E6E6;
-  height: 80px;
+  border-top: 1px solid #e6e6e6;
+  height: 10vh;
   background-color: #fff;
   display: flex;
   justify-content: space-between;
@@ -96,7 +86,7 @@
   color: #02c00a;
   background: none !important;
   border: none;
-  border-left: 1px solid #E6E6E6;
+  border-left: 1px solid #e6e6e6;
   border-radius: 0;
   padding: 0;
   font-size: 16px;
@@ -108,35 +98,13 @@
   cursor: pointer;
 }
 
-#channels {
-  min-width: 200px;
-}
-
-#channels ul {
-  padding: 0;
-  margin: 0;
-}
-
-#channels ul .channel-tab {
-  border-bottom: 1px solid #E6E6E6;
-  padding: 20px 20px;
-  text-align: center;
-  cursor: pointer;
-  margin: 0;
-}
-
-#channels ul .channel-tab .member-count {
-  margin: 0;
-  padding: 10px 0;
-  font-size: 12px;
-}
-
 #add-channel {
   padding: 12px;
-  border-bottom: 1px solid #ECECEC;
+  border-bottom: 1px solid #ececec;
 }
 
 #add-channel > input {
+  padding-left: 5px;
   height: 30px;
   width: 100%;
   outline: none;
@@ -173,16 +141,20 @@ ul {
   text-align: left;
   max-width: 60%;
   border: 1px solid rgb(218, 218, 218);
-  background-color: #F1F1F1;
+  background-color: #f1f1f1;
   margin-left: 3px;
 }
 
 #message.fresh span.message-bubble {
-  background-color: #E4F8E6;
+  background-color: #e4f8e6;
 }
 
 .active {
-   background-color: #F0F2F4;
+  border-left: 8px solid rgba(41, 203, 114, 0.74);
+}
+
+.active > div {
+  padding: 15px;
 }
 
 .lnr-check:before {
@@ -192,4 +164,8 @@ ul {
   position: absolute;
   right: 6px;
   bottom: 4px;
+}
+
+.ant-dropdown-menu-item-disabled, .ant-dropdown-menu-submenu-title-disabled {
+  cursor: default !important;
 }

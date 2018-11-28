@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
-import InfiniteScroll from 'react-infinite-scroller';
-import { MessageRepository, EkoLoadingStatus } from 'eko-sdk';
+import React, { Component } from "react";
+import InfiniteScroll from "react-infinite-scroller";
+import { MessageRepository, EkoLoadingStatus } from "eko-sdk";
 
-import Message from './Message'
-
+import Message from "./Message";
 
 class MessagesList extends Component {
   constructor(props) {
@@ -12,7 +11,7 @@ class MessagesList extends Component {
     this.messageRepo = new MessageRepository();
     this.state = {
       messages: [],
-      canLoadMore: false,
+      canLoadMore: false
     };
   }
 
@@ -25,7 +24,7 @@ class MessagesList extends Component {
       return {
         messages: [],
         canLoadMore: false,
-        prevChannelId: props.currentChannelId,
+        prevChannelId: props.currentChannelId
       };
     }
 
@@ -46,21 +45,23 @@ class MessagesList extends Component {
   resetMessageCollection = () => {
     this.messageCollection && this.messageCollection.dispose();
     // Get messages in selected Channel
-    this.messageCollection = this.messageRepo.messagesForChannel({ channelId: this.props.currentChannelId });
+    this.messageCollection = this.messageRepo.messagesForChannel({
+      channelId: this.props.currentChannelId
+    });
 
     // Once message data is received, run the following code.
-    this.messageCollection.on('dataUpdated', data => {
+    this.messageCollection.on("dataUpdated", data => {
       this.setState({ messages: data });
     });
 
-    this.messageCollection.on('loadingStatusChanged', ({ newValue }) => {
+    this.messageCollection.on("loadingStatusChanged", ({ newValue }) => {
       if (newValue === EkoLoadingStatus.Loaded) {
         this.setState({ canLoadMore: this.messageCollection.hasMore });
       } else {
         this.setState({ canLoadMore: false });
       }
     });
-  }
+  };
 
   render() {
     const { canLoadMore, messages } = this.state;
@@ -76,16 +77,13 @@ class MessagesList extends Component {
         >
           <ul id="message-list">
             {messages.map(message => (
-              <Message
-                key={message.messageId}
-                {...message}
-              />
+              <Message key={message.messageId} {...message} />
             ))}
           </ul>
         </InfiniteScroll>
       </div>
     );
-  };
-};
+  }
+}
 
-export default MessagesList
+export default MessagesList;

@@ -47,7 +47,7 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const Message = ({ user, data, syncState }) => {
+const Message = ({ user, userId, data, messageId, syncState, flagMessage, unflagMessage, flagUser, unflagUser }) => {
   const userTitle =
     user && user.model
       ? `${user.model.userId}${
@@ -57,11 +57,17 @@ const Message = ({ user, data, syncState }) => {
 
   const content = (
     <FlagContent>
-      <a onClick={() => {}}>
-        <p>Report Message</p>
+      <a onClick={() => flagMessage(messageId)}>
+        <p>Flag Message</p>
       </a>
-      <a>
-        <p>Report User</p>
+      <a onClick={() => unflagMessage(messageId)}>
+        <p>Unflag Message</p>
+      </a>
+      <a onClick={() => flagUser(userId)}>
+        <p>Flag User</p>
+      </a>
+      <a onClick={() => unflagUser(userId)}>
+        <p>Unflag User</p>
       </a>
     </FlagContent>
   );
@@ -70,7 +76,7 @@ const Message = ({ user, data, syncState }) => {
       <MessageTitle>{userTitle}:</MessageTitle>
       <MessageContent className="message-content">
         {syncState === 3 ? (
-          "(Word is banned)"
+          "Deleted..."
         ) : (
           <MessageBubble className="message-bubble">
             {data.text}

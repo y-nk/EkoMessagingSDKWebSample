@@ -4,6 +4,7 @@ import React, { PureComponent } from "react";
 import EkoClient, {
   MessageRepository,
   ChannelRepository,
+  UserRepository,
   EkoChannelType
 } from "eko-sdk";
 
@@ -54,6 +55,9 @@ const channelRepo = new ChannelRepository();
 
 // Instantiate Message Repository
 const messageRepo = new MessageRepository();
+
+// Instantiate User Repository
+const userRepo = new UserRepository();
 
 // Set up static channels
 const staticChanelIdsList = ["newChannel", "ANDROID", "public_eko"];
@@ -158,6 +162,34 @@ class App extends PureComponent {
     });
   };
 
+  // Flag message
+  flagMessage = messageId => {
+    messageRepo.flag({
+      messageId
+    });
+  };
+
+  // Unflag message
+  unflagMessage = messageId => {
+    messageRepo.unflag({
+      messageId
+    });
+  };
+
+  // Flag user
+  flagUser = userId => {
+    userRepo.flag({
+      userId
+    });
+  };
+
+  // Unflag user
+  unflagUser = userId => {
+    userRepo.flag({
+      userId
+    });
+  };
+
   render() {
     return (
       <Container>
@@ -182,6 +214,10 @@ class App extends PureComponent {
             {this.state.currentChannelId && (
               <MessageList
                 currentChannelId={this.state.currentChannelId}
+                flagMessage={this.flagMessage}
+                unflagMessage={this.unflagMessage}
+                flagUser={this.flagUser}
+                unflagUser={this.unflagUser}
               />
             )}
             <AddMessage

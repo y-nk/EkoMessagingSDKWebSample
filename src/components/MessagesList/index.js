@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import InfiniteScroll from "react-infinite-scroller";
-import { MessageRepository, EkoLoadingStatus } from "eko-sdk";
+import {
+  MessageRepository,
+  EkoLoadingStatus
+} from "eko-sdk";
 import styled from "styled-components";
 
 import Message from "./Message";
@@ -70,7 +73,6 @@ class MessagesList extends Component {
       }
     });
   };
-
   render() {
     const { canLoadMore, messages } = this.state;
 
@@ -84,9 +86,17 @@ class MessagesList extends Component {
           isReverse
         >
           <MessageListPanel>
-            {messages.map(message => (
-              <Message key={message.messageId} {...message} />
-            ))}
+            {messages.map(message => {
+              console.log(message)
+              return <Message
+                key={message.messageId}
+                flagMessage={this.props.flagMessage}
+                unflagMessage={this.props.unflagMessage}
+                flagUser={this.props.flagUser}
+                unflagUser={this.props.unflagUser}
+                {...message}
+              />
+            })}
           </MessageListPanel>
         </InfiniteScroll>
       </div>

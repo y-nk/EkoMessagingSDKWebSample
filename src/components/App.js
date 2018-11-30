@@ -12,6 +12,34 @@ import ChannelListPanel from "./ChannelListPanel";
 import MessageList from "./MessagesList";
 import AddMessage from "./MessagesList/AddMessage";
 import Header from "./Header";
+import styled from "styled-components";
+
+const Container = styled.div`
+  height: 100%;
+  width: 100%;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+`;
+
+const Row = styled.div`
+  display: flex;
+  height: calc(100vh - 50px);
+`;
+
+const ChannelList = styled.div`
+  width: 280px;
+  display: inline-block;
+  background-color: #fff;
+  border-right: 1px solid #ececec;
+  overflow: scroll;
+`;
+
+const MessageListPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: calc(100% - 280px);
+`;
 
 // Connect to EkoClient with apiKey
 const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });
@@ -20,15 +48,20 @@ client.registerSession({
   userId: SdkConfig.DEFAULT_USER.USER_ID,
   displayName: SdkConfig.DEFAULT_USER.DISPLAY_NAME
 });
+
+// Instantiate Channel Repository
 const channelRepo = new ChannelRepository();
+
+// Instantiate Message Repository
+const messageRepo = new MessageRepository();
 
 // Set up static channels
 const staticChanelIdsList = ["newChannel", "ANDROID", "public_eko"];
 
-
 class App extends PureComponent {
   state = {
-    displayName: '',
+    displayName: "",
+    displayInput: false,
     channels: [],
     currentChannelId: "newChannel"
   };
@@ -42,9 +75,9 @@ class App extends PureComponent {
       console.log(
         `Current user: ${model.userId}, Display Name: ${model.displayName}`
       );
-      return this.setState({
+      this.setState({
         displayName: model.displayName
-      })
+      });
     });
 
     // Get channel tags for each channel
@@ -53,7 +86,24 @@ class App extends PureComponent {
     });
   }
 
-  // Check if channel does not already exist
+  handleInput = () =>
+    this.setState({
+      displayInput: !this.state.displayInput
+    });
+
+  handleDisplayNameChange = e =>
+    this.setState({
+      displayName: e.target.value
+    });
+
+  // Change the display name of current user
+  changeDisplayName = () => {
+    client.setDisplayName(this.state.displayName).catch(err => {
+      console.log(err);
+    });
+    return this.handleInput();
+  };
+
   existingChannel = (value, channels) =>
     channels.some(
       channel => channel.channelId.toLowerCase() === value.toLowerCase()
@@ -62,7 +112,7 @@ class App extends PureComponent {
   // Add channel to local state
   addChannel = channelId => {
     const liveChannel = channelRepo.channelForId(channelId);
-    // On dataUpdated, retrieve the tags for the channel
+    // On dataUpdated, retrieve the channels
     liveChannel.on("dataUpdated", data => {
       const channelIndex = this.state.channels.findIndex(
         channel => channel.channelId === data.channelId
@@ -83,9 +133,9 @@ class App extends PureComponent {
     });
   };
 
-  // Join selected Channel
+  // Join selected channel
   joinChannel = channelId => {
-    // Join Channel
+    // Join channel
     channelRepo.joinChannel({
       channelId,
       type: EkoChannelType.Standard
@@ -95,11 +145,9 @@ class App extends PureComponent {
     });
   };
 
-  // Send message in Channel
+  // Send message in channel
   sendMessage = (message, channelId) => {
-    // Instantiate Message Repository
-    const messageRepo = new MessageRepository();
-    // Send Message
+    // Send message
     const messageLiveObject = messageRepo.createTextMessage({
       channelId,
       text: message
@@ -112,10 +160,16 @@ class App extends PureComponent {
 
   render() {
     return (
-      <div id="container">
-        <Header displayName={this.state.displayName} />
-        <div className="row">
-          <div id="left">
+      <Container>
+        <Header
+          displayName={this.state.displayName}
+          displayInput={this.state.displayInput}
+          handleInput={this.handleInput}
+          handleDisplayNameChange={this.handleDisplayNameChange}
+          changeDisplayName={this.changeDisplayName}
+        />
+        <Row>
+          <ChannelList>
             <ChannelListPanel
               channels={this.state.channels}
               currentChannelId={this.state.currentChannelId}
@@ -123,18 +177,20 @@ class App extends PureComponent {
               existingChannel={this.existingChannel}
               joinChannel={this.joinChannel}
             />
-          </div>
-          <div id="right">
+          </ChannelList>
+          <MessageListPanel>
             {this.state.currentChannelId && (
-              <MessageList currentChannelId={this.state.currentChannelId} />
+              <MessageList
+                currentChannelId={this.state.currentChannelId}
+              />
             )}
             <AddMessage
               sendMessage={this.sendMessage}
               currentChannelId={this.state.currentChannelId}
             />
-          </div>
-        </div>
-      </div>
+          </MessageListPanel>
+        </Row>
+      </Container>
     );
   }
 }

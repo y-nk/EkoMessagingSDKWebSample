@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { MessageRepository, EkoLoadingStatus } from "eko-sdk";
+import styled from "styled-components";
 
 import Message from "./Message";
+
+const MessageListPanel = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  margin: 0;
+  padding: 0 20px;
+`;
 
 class MessagesList extends Component {
   constructor(props) {
@@ -75,11 +83,11 @@ class MessagesList extends Component {
           loader={<span key={0}>Loading</span>}
           isReverse
         >
-          <ul id="message-list">
+          <MessageListPanel>
             {messages.map(message => (
               <Message key={message.messageId} {...message} />
             ))}
-          </ul>
+          </MessageListPanel>
         </InfiniteScroll>
       </div>
     );

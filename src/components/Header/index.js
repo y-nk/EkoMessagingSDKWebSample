@@ -1,6 +1,8 @@
 import React from "react";
-import { Icon, Dropdown, Menu } from "antd";
+import { Icon, Dropdown, Menu, Input } from "antd";
 import styled from "styled-components";
+
+import { version } from '../../../package.json';
 
 const HeaderContainer = styled.div`
   height: 50px;
@@ -24,7 +26,7 @@ const Title = styled.div`
 
 const Setting = styled(Dropdown)`
   display: inline-block;
-  padding: 10px;
+  padding: 10px 15px;
   margin-left: 15px;
   height: 100%;
   border-left: 1px solid white;
@@ -47,26 +49,45 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const menu = (
-  <Menu>
-    <Menu.Item onClick={() => {}}>Change Display Name</Menu.Item>
-    <Menu.Divider />
-    <Menu.Item disabled>Version 1.4.0</Menu.Item>
-  </Menu>
-);
+const Header = ({
+  displayName,
+  displayInput,
+  handleInput,
+  handleDisplayNameChange,
+  changeDisplayName
+}) => {
+  const menu = (
+    <Menu>
+      <Menu.Item onClick={() => handleInput()}>Change Display Name</Menu.Item>
+      <Menu.Divider />
+      <Menu.Item disabled>Version {version}</Menu.Item>
+    </Menu>
+  );
 
-const Header = props => (
-  <HeaderContainer>
-    <Title>
-      <h1>eko-sdk Sample App</h1>
-    </Title>
-    <DisplayName>
-      <span>{props.displayName}</span>
-      <Setting overlay={menu} placement="bottomRight" trigger={["click"]}>
-        <StyledIcon type="setting" />
-      </Setting>
-    </DisplayName>
-  </HeaderContainer>
-);
+  return (
+    <HeaderContainer>
+      <Title>
+        <h1>eko-sdk Sample App</h1>
+      </Title>
+      <DisplayName>
+        <span>
+          {displayInput ? (
+            <Input
+              type="text"
+              value={displayName}
+              onChange={handleDisplayNameChange}
+              onPressEnter={() => changeDisplayName()}
+            />
+          ) : (
+            displayName
+          )}
+        </span>
+        <Setting overlay={menu} placement="bottomRight" trigger={["click"]}>
+          <StyledIcon type="setting" />
+        </Setting>
+      </DisplayName>
+    </HeaderContainer>
+  );
+};
 
 export default Header;

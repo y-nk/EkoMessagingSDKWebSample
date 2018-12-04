@@ -1,7 +1,7 @@
-import React from "react";
-import AddChannel from "./AddChannel";
-import ChannelList from "./ChannelList";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import AddChannel from './AddChannel';
+import ChannelList from './ChannelList';
 
 const ChannelPanel = styled.div`
   padding: 0;

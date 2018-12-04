@@ -1,6 +1,6 @@
-import React from "react";
-import { Icon, Dropdown, Menu, Input } from "antd";
-import styled from "styled-components";
+import React, { Component } from 'react';
+import { Icon, Dropdown, Menu, Input } from 'antd';
+import styled from 'styled-components';
 
 import { version } from '../../../package.json';
 
@@ -49,45 +49,67 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const Header = ({
-  displayName,
-  displayInput,
-  handleInput,
-  handleDisplayNameChange,
-  changeDisplayName
-}) => {
-  const menu = (
-    <Menu>
-      <Menu.Item onClick={() => handleInput()}>Change Display Name</Menu.Item>
-      <Menu.Divider />
-      <Menu.Item disabled>Version {version}</Menu.Item>
-    </Menu>
-  );
+class Header extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      displayNameInput: '',
+      shouldShowUserDisplayNameInput: false,
+    }
+  }
 
-  return (
-    <HeaderContainer>
-      <Title>
-        <h1>eko-sdk Sample App</h1>
-      </Title>
-      <DisplayName>
-        <span>
-          {displayInput ? (
-            <Input
-              type="text"
-              value={displayName}
-              onChange={handleDisplayNameChange}
-              onPressEnter={() => changeDisplayName()}
-            />
-          ) : (
-            displayName
-          )}
-        </span>
-        <Setting overlay={menu} placement="bottomRight" trigger={["click"]}>
-          <StyledIcon type="setting" />
-        </Setting>
-      </DisplayName>
-    </HeaderContainer>
-  );
-};
+  handleInput = () => this.setState({
+    shouldShowUserDisplayNameInput: !this.state.shouldShowUserDisplayNameInput,
+  });
+
+  handleDisplayNameChange = e => this.setState({
+    displayNameInput: e.target.value,
+  });
+
+  render() {
+    const {
+      displayName,
+      changeDisplayName,
+    } = this.props;
+    const menu = (
+      <Menu>
+        <Menu.Item onClick={() => this.handleInput()}>Change Display Name</Menu.Item>
+        <Menu.Divider />
+        <Menu.Item disabled>
+          Version
+          {version}
+        </Menu.Item>
+      </Menu>
+    );
+
+    return (
+      <HeaderContainer>
+        <Title>
+          <h1>eko-sdk Sample App</h1>
+        </Title>
+        <DisplayName>
+          <span>
+            {this.state.shouldShowUserDisplayNameInput ? (
+              <Input
+                type="text"
+                value={this.state.displayNameInput}
+                onChange={this.handleDisplayNameChange}
+                onPressEnter={() => {
+                  changeDisplayName(this.state.displayNameInput)
+                  this.handleInput()
+                  }}
+              />
+            ) : (
+              displayName
+            )}
+          </span>
+          <Setting overlay={menu} placement="bottomRight" trigger={["click"]}>
+            <StyledIcon type="setting" />
+          </Setting>
+        </DisplayName>
+      </HeaderContainer>
+    );
+  }
+}
 
 export default Header;

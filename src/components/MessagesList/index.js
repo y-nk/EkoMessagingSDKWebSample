@@ -1,12 +1,9 @@
-import React, { Component } from "react";
-import InfiniteScroll from "react-infinite-scroller";
-import {
-  MessageRepository,
-  EkoLoadingStatus
-} from "eko-sdk";
-import styled from "styled-components";
+import React, { Component } from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
+import { MessageRepository, EkoLoadingStatus } from 'eko-sdk';
+import styled from 'styled-components';
 
-import Message from "./Message";
+import Message from './Message';
 
 const MessageListPanel = styled.div`
   display: flex;
@@ -22,7 +19,7 @@ class MessagesList extends Component {
     this.messageRepo = new MessageRepository();
     this.state = {
       messages: [],
-      canLoadMore: false
+      canLoadMore: false,
     };
   }
 
@@ -35,7 +32,7 @@ class MessagesList extends Component {
       return {
         messages: [],
         canLoadMore: false,
-        prevChannelId: props.currentChannelId
+        prevChannelId: props.currentChannelId,
       };
     }
 
@@ -57,22 +54,23 @@ class MessagesList extends Component {
     this.messageCollection && this.messageCollection.dispose();
     // Get messages in selected Channel
     this.messageCollection = this.messageRepo.messagesForChannel({
-      channelId: this.props.currentChannelId
+      channelId: this.props.currentChannelId,
     });
 
     // Once message data is received, run the following code.
-    this.messageCollection.on("dataUpdated", data => {
+    this.messageCollection.on('dataUpdated', data => {
       this.setState({ messages: data });
     });
 
-    this.messageCollection.on("loadingStatusChanged", ({ newValue }) => {
+    this.messageCollection.on('loadingStatusChanged', ({ newValue }) => {
       if (newValue === EkoLoadingStatus.Loaded) {
         this.setState({ canLoadMore: this.messageCollection.hasMore });
       } else {
         this.setState({ canLoadMore: false });
       }
     });
-  };
+  }
+
   render() {
     const { canLoadMore, messages } = this.state;
 
@@ -86,17 +84,13 @@ class MessagesList extends Component {
           isReverse
         >
           <MessageListPanel>
-            {messages.map(message => {
-              console.log(message)
-              return <Message
-                key={message.messageId}
-                flagMessage={this.props.flagMessage}
-                unflagMessage={this.props.unflagMessage}
-                flagUser={this.props.flagUser}
-                unflagUser={this.props.unflagUser}
-                {...message}
-              />
-            })}
+            {messages.map(message => 
+                <Message
+                  key={message.messageId}
+                  {...message}
+                />
+              )
+            }
           </MessageListPanel>
         </InfiniteScroll>
       </div>

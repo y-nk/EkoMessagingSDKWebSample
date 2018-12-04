@@ -1,7 +1,7 @@
-import React from "react";
-import { EkoSyncState } from "eko-sdk";
-import { Icon, Popover } from "antd";
-import styled from "styled-components";
+import React, { Component } from 'react';
+import { EkoSyncState, MessageRepository, UserRepository } from 'eko-sdk';
+import { message, Icon, Popover } from 'antd';
+import styled from 'styled-components';
 
 const MessageBlock = styled.div`
   padding: 6px 16px 6px 0;
@@ -47,48 +47,83 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const Message = ({ user, userId, data, messageId, syncState, flagMessage, unflagMessage, flagUser, unflagUser }) => {
-  const userTitle =
-    user && user.model
-      ? `${user.model.userId}${
-          user.model.displayName ? ` (${user.model.displayName})` : ""
-        }`
-      : "Loading...";
+class Message extends Component {
+  constructor(props) {
+    super(props);
+    this.messageRepo = new MessageRepository();
+    this.userRepo = new UserRepository();
+  }
 
-  const content = (
-    <FlagContent>
-      <a onClick={() => flagMessage(messageId)}>
-        <p>Flag Message</p>
-      </a>
-      <a onClick={() => unflagMessage(messageId)}>
-        <p>Unflag Message</p>
-      </a>
-      <a onClick={() => flagUser(userId)}>
-        <p>Flag User</p>
-      </a>
-      <a onClick={() => unflagUser(userId)}>
-        <p>Unflag User</p>
-      </a>
-    </FlagContent>
-  );
-  return (
-    <MessageBlock className={syncState === EkoSyncState.Synced ? "fresh" : ""}>
-      <MessageTitle>{userTitle}:</MessageTitle>
-      <MessageContent className="message-content">
-        {syncState === 3 ? (
-          "Deleted..."
-        ) : (
-          <MessageBubble className="message-bubble">
-            {data.text}
-            {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
-          </MessageBubble>
-        )}
-        <Popover content={content} placement="right" trigger={["click"]}>
-          <StyledIcon type="exclamation-circle" theme="filled" />
-        </Popover>
-      </MessageContent>
-    </MessageBlock>
-  );
-};
+  // Flag message
+  flagMessage = messageId => {
+    this.messageRepo.flag({ messageId });
+    message.info('Message Flagged')
+  };
+
+  // Unflag message
+  unflagMessage = messageId => {
+    this.messageRepo.unflag({ messageId });
+    message.info('Message Unflagged')
+  };
+
+  // Flag user
+  flagUser = userId => {
+    this.userRepo.flag({ userId });
+    message.info('User Flagged')
+  };
+
+  // Unflag user
+  unflagUser = userId => {
+    this.userRepo.flag({ userId });
+    message.info('User Unflagged')
+  };
+
+  render() {
+    const { user, userId, data, messageId, syncState } = this.props;
+    const userTitle =
+      user && user.model
+        ? `${user.model.userId}${
+            user.model.displayName ? ` (${user.model.displayName})` : ''
+          }`
+        : 'Loading...';
+
+    const content = (
+      <FlagContent>
+        <a onClick={() => this.flagMessage(messageId)}>
+          <p>Flag Message</p>
+        </a>
+        <a onClick={() => this.unflagMessage(messageId)}>
+          <p>Unflag Message</p>
+        </a>
+        <a onClick={() => this.flagUser(userId)}>
+          <p>Flag User</p>
+        </a>
+        <a onClick={() => this.unflagUser(userId)}>
+          <p>Unflag User</p>
+        </a>
+      </FlagContent>
+    );
+    return (
+      <MessageBlock
+        className={syncState === EkoSyncState.Synced ? "fresh" : ""}
+      >
+        <MessageTitle>{userTitle}:</MessageTitle>
+        <MessageContent className="message-content">
+          {syncState === 3 ? (
+            "Deleted..."
+          ) : (
+            <MessageBubble className="message-bubble">
+              {data.text}
+              {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
+            </MessageBubble>
+          )}
+          <Popover content={content} placement="right" trigger={["click"]}>
+            <StyledIcon type="exclamation-circle" theme="filled" />
+          </Popover>
+        </MessageContent>
+      </MessageBlock>
+    );
+  }
+}
 
 export default Message;

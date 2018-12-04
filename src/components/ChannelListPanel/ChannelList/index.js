@@ -1,6 +1,6 @@
-import React from "react";
-import { Tag } from "antd";
-import styled from "styled-components";
+import React from 'react';
+import { Tag } from 'antd';
+import styled from 'styled-components';
 
 const Channel = styled.div`
   border-bottom: 1px solid #e6e6e6;

@@ -9,9 +9,9 @@ class AddMessage extends Component {
         <input
           placeholder="Type your message..."
           onKeyPress={e => {
-            if (e.key === "Enter" && input.value !== "") {
+            if (e.key === 'Enter' && input.value !== '') {
               sendMessage(input.value, currentChannelId);
-              input.value = "";
+              input.value = '';
             }
           }}
           type="text"
@@ -22,9 +22,9 @@ class AddMessage extends Component {
         <button
           type="submit"
           onClick={() => {
-            if (input.value !== "") {
+            if (input.value !== '') {
               sendMessage(input.value, currentChannelId);
-              input.value = "";
+              input.value = '';
             }
           }}
           className="send-button"

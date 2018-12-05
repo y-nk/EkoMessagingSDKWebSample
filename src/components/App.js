@@ -7,40 +7,15 @@ import EkoClient, {
   EkoChannelType,
 } from 'eko-sdk';
 
-import styled from 'styled-components';
 import { message } from 'antd';
+import { Container, Row, ChannelList, MessageListPanel } from './styles';
 import SdkConfig from '../sdk-config';
 import ChannelListPanel from './ChannelListPanel';
 import MessageList from './MessagesList';
 import AddMessage from './MessagesList/AddMessage';
 import Header from './Header';
 
-const Container = styled.div`
-  height: 100%;
-  width: 100%;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-`;
 
-const Row = styled.div`
-  display: flex;
-  height: calc(100vh - 50px);
-`;
-
-const ChannelList = styled.div`
-  width: 280px;
-  display: inline-block;
-  background-color: #fff;
-  border-right: 1px solid #ececec;
-  overflow: scroll;
-`;
-
-const MessageListPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  width: calc(100% - 280px);
-`;
 
 // Connect to EkoClient with apiKey
 const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });

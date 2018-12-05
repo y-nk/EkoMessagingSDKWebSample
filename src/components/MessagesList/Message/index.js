@@ -1,51 +1,7 @@
 import React, { Component } from 'react';
 import { EkoSyncState, MessageRepository, UserRepository } from 'eko-sdk';
-import { message, Icon, Popover } from 'antd';
-import styled from 'styled-components';
-
-const MessageBlock = styled.div`
-  padding: 6px 16px 6px 0;
-`;
-
-const MessageTitle = styled.p`
-  color: #555;
-  font-size: 15px;
-  margin: 0;
-`;
-
-const MessageContent = styled.span``;
-
-const FlagContent = styled.div`
-  p {
-    margin: 0;
-    padding: 5px 12px;
-    &:hover {
-      cursor: pointer;
-      background-color: #e6f7ff;
-    }
-  }
-`;
-
-const MessageBubble = styled.span`
-  display: inline-block;
-  min-height: 30px;
-  border-radius: 4px;
-  padding: 6px 26px 6px 16px;
-  position: relative;
-  margin-top: 4px;
-  color: #404040;
-  max-width: 60%;
-  border: 1px solid rgb(218, 218, 218);
-  background-color: #f1f1f1;
-  margin-left: 3px;
-  font-size: 14px;
-`;
-
-const StyledIcon = styled(Icon)`
-  margin-left: 10px;
-  opacity: 0;
-  cursor: pointer;
-`;
+import { message, Popover } from 'antd';
+import { FlagContent, MessageBlock, MessageTitle, MessageContent, MessageBubble, StyledIcon} from './styles';
 
 class Message extends Component {
   constructor(props) {
@@ -56,26 +12,34 @@ class Message extends Component {
 
   // Flag message
   flagMessage = messageId => {
-    this.messageRepo.flag({ messageId });
-    message.info('Message Flagged')
+    this.messageRepo.flag({ messageId })
+    .then(() => {
+      message.info('Message Flagged')
+    })
   };
 
   // Unflag message
   unflagMessage = messageId => {
-    this.messageRepo.unflag({ messageId });
-    message.info('Message Unflagged')
+    this.messageRepo.unflag({ messageId })
+    .then(() => {
+      message.info('Message Unflagged')
+    })
   };
 
   // Flag user
   flagUser = userId => {
-    this.userRepo.flag({ userId });
-    message.info('User Flagged')
+    this.userRepo.flag({ userId })
+    .then(() => {
+      message.info('User Flagged')
+    })
   };
 
   // Unflag user
   unflagUser = userId => {
-    this.userRepo.flag({ userId });
-    message.info('User Unflagged')
+    this.userRepo.flag({ userId })
+    .then(() => {
+      message.info('User Unflagged')
+    })
   };
 
   render() {
@@ -105,12 +69,12 @@ class Message extends Component {
     );
     return (
       <MessageBlock
-        className={syncState === EkoSyncState.Synced ? "fresh" : ""}
+        className={syncState === EkoSyncState.Synced ? 'fresh' : ''}
       >
         <MessageTitle>{userTitle}:</MessageTitle>
         <MessageContent className="message-content">
           {syncState === 3 ? (
-            "Deleted..."
+            'Deleted...'
           ) : (
             <MessageBubble className="message-bubble">
               {data.text}

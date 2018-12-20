@@ -15,8 +15,6 @@ import MessageList from './MessagesList';
 import AddMessage from './MessagesList/AddMessage';
 import Header from './Header';
 
-
-
 // Connect to EkoClient with apiKey
 const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });
 // Register Session with EkoClient with userId and display name
@@ -46,12 +44,14 @@ class App extends PureComponent {
     const currentUser = client.currentUser;
 
     // On current user data update, set current display name
-    currentUser.on('dataUpdated', model => this.setState({
-      displayName: model.displayName,
-    }));
+    currentUser.on('dataUpdated', model =>
+      this.setState({
+        displayName: model.displayName,
+      })
+    );
 
     // Get channel tags for each channel
-    staticChanelIdsList.forEach((channelId) => {
+    staticChanelIdsList.forEach(channelId => {
       this.addChannel(channelId);
     });
   }
@@ -59,24 +59,25 @@ class App extends PureComponent {
   // Change the display name of current user
   changeDisplayName = displayName => {
     client.setDisplayName(displayName).catch(err => {
-      message.error('Display Name Input Error')
+      message.error('Display Name Input Error');
     });
     this.setState({
-      displayName
-    })
+      displayName,
+    });
   };
 
-  existingChannel = (value, channels) => channels.some(
-    channel => channel.channelId.toLowerCase() === value.toLowerCase(),
-  );
+  existingChannel = (value, channels) =>
+    channels.some(
+      channel => channel.channelId.toLowerCase() === value.toLowerCase()
+    );
 
   // Add channel to local state
-  addChannel = (channelId) => {
+  addChannel = channelId => {
     const liveChannel = channelRepo.channelForId(channelId);
     // On dataUpdated, retrieve the channels
     liveChannel.on('dataUpdated', data => {
       const channelIndex = this.state.channels.findIndex(
-        channel => channel.channelId === data.channelId,
+        channel => channel.channelId === data.channelId
       );
       if (channelIndex === -1) {
         this.setState({
@@ -95,7 +96,7 @@ class App extends PureComponent {
   };
 
   // Join selected channel
-  joinChannel = (channelId) => {
+  joinChannel = channelId => {
     // Join channel
     channelRepo.joinChannel({
       channelId,
@@ -115,7 +116,7 @@ class App extends PureComponent {
     });
     // On message sent, run the following code.
     messageLiveObject.on('dataStatusChanged', data => {
-      message.success('Message sent')
+      message.success('Message sent');
     });
   };
 
@@ -138,9 +139,7 @@ class App extends PureComponent {
           </ChannelList>
           <MessageListPanel>
             {this.state.currentChannelId && (
-              <MessageList
-                currentChannelId={this.state.currentChannelId}
-              />
+              <MessageList currentChannelId={this.state.currentChannelId} />
             )}
             <AddMessage
               sendMessage={this.sendMessage}

@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { EkoSyncState, MessageRepository, UserRepository } from 'eko-sdk';
 import { message, Popover } from 'antd';
-import { FlagContent, MessageBlock, MessageTitle, MessageContent, MessageBubble, StyledIcon} from './styles';
+import {
+  FlagContent,
+  MessageBlock,
+  MessageTitle,
+  MessageContent,
+  MessageBubble,
+  StyledIcon,
+} from './styles';
 
 class Message extends Component {
   constructor(props) {
@@ -12,34 +19,30 @@ class Message extends Component {
 
   // Flag message
   flagMessage = messageId => {
-    this.messageRepo.flag({ messageId })
-    .then(() => {
-      message.info('Message Flagged')
-    })
+    this.messageRepo.flag({ messageId }).then(() => {
+      message.info('Message Flagged');
+    });
   };
 
   // Unflag message
   unflagMessage = messageId => {
-    this.messageRepo.unflag({ messageId })
-    .then(() => {
-      message.info('Message Unflagged')
-    })
+    this.messageRepo.unflag({ messageId }).then(() => {
+      message.info('Message Unflagged');
+    });
   };
 
   // Flag user
   flagUser = userId => {
-    this.userRepo.flag({ userId })
-    .then(() => {
-      message.info('User Flagged')
-    })
+    this.userRepo.flag({ userId }).then(() => {
+      message.info('User Flagged');
+    });
   };
 
   // Unflag user
   unflagUser = userId => {
-    this.userRepo.flag({ userId })
-    .then(() => {
-      message.info('User Unflagged')
-    })
+    this.userRepo.flag({ userId }).then(() => {
+      message.info('User Unflagged');
+    });
   };
 
   render() {
@@ -67,6 +70,7 @@ class Message extends Component {
         </a>
       </FlagContent>
     );
+
     return (
       <MessageBlock
         className={syncState === EkoSyncState.Synced ? 'fresh' : ''}
@@ -81,7 +85,7 @@ class Message extends Component {
               {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
             </MessageBubble>
           )}
-          <Popover content={content} placement="right" trigger={["click"]}>
+          <Popover content={content} placement="right" trigger={['click']}>
             <StyledIcon type="exclamation-circle" theme="filled" />
           </Popover>
         </MessageContent>

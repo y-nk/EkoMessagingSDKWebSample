@@ -1,10 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
 import AddChannel from './AddChannel';
 import ChannelList from './ChannelList';
 
+const ChannelPanel = styled.div`
+  padding: 0;
+  margin: 0;
+`;
 
 const ChannelListPanel = props => (
-  <div id="channels">
+  <ChannelPanel>
     <AddChannel
       channels={props.channels}
       joinChannel={props.joinChannel}
@@ -16,7 +21,7 @@ const ChannelListPanel = props => (
       joinChannel={props.joinChannel}
       currentChannelId={props.currentChannelId}
     />
-  </div>
+  </ChannelPanel>
 );
 
 export default ChannelListPanel;

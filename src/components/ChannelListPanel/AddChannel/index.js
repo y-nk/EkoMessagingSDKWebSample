@@ -3,20 +3,16 @@ import React, { Component } from 'react';
 class AddChannel extends Component {
   render() {
     let input;
-    const {
-      existingChannel,
-      channels,
-      addChannel,
-      joinChannel
-    } = this.props
+    const { existingChannel, channels, addChannel, joinChannel } = this.props;
     return (
       <section id="add-channel">
-        <input placeholder="Add Channel"
+        <input
+          placeholder="Add Channel"
           onKeyPress={e => {
             if (e.key === 'Enter' && input.value !== '') {
-              if (!(existingChannel(input.value, channels))) {
-                addChannel(input.value)
-                joinChannel(input.value)
+              if (!existingChannel(input.value, channels)) {
+                addChannel(input.value);
+                joinChannel(input.value);
                 input.value = '';
               }
             }
@@ -28,7 +24,7 @@ class AddChannel extends Component {
         />
       </section>
     );
-  };
-};
+  }
+}
 
 export default AddChannel;

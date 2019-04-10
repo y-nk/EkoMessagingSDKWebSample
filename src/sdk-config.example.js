@@ -5,4 +5,4 @@ export default {
     USER_ID: 'default_web_user_id',
     DISPLAY_NAME: 'default_web_user_name',
   },
-}
+};

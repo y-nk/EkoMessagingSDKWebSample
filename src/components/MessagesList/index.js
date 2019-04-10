@@ -1,9 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { MessageRepository, EkoLoadingStatus } from 'eko-sdk';
+import styled from 'styled-components';
 
-import Message from './Message'
+import Message from './Message';
 
+const MessageListPanel = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  margin: 0;
+  padding: 0 20px;
+`;
 
 class MessagesList extends Component {
   constructor(props) {
@@ -46,7 +53,9 @@ class MessagesList extends Component {
   resetMessageCollection = () => {
     this.messageCollection && this.messageCollection.dispose();
     // Get messages in selected Channel
-    this.messageCollection = this.messageRepo.messagesForChannel({ channelId: this.props.currentChannelId });
+    this.messageCollection = this.messageRepo.messagesForChannel({
+      channelId: this.props.currentChannelId,
+    });
 
     // Once message data is received, run the following code.
     this.messageCollection.on('dataUpdated', data => {
@@ -74,18 +83,19 @@ class MessagesList extends Component {
           loader={<span key={0}>Loading</span>}
           isReverse
         >
-          <ul id="message-list">
-            {messages.map(message => (
-              <Message
-                key={message.messageId}
-                {...message}
-              />
-            ))}
-          </ul>
+          <MessageListPanel>
+            {messages.map(message => 
+                <Message
+                  key={message.messageId}
+                  {...message}
+                />
+              )
+            }
+          </MessageListPanel>
         </InfiniteScroll>
       </div>
     );
-  };
-};
+  }
+}
 
-export default MessagesList
+export default MessagesList;

@@ -5,30 +5,29 @@ import { version } from '../../../package.json';
 
 class Header extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       displayNameInput: '',
       shouldShowUserDisplayNameInput: false,
-    }
+    };
   }
 
   handleInput = () => {
+    const { shouldShowUserDisplayNameInput } = this.state;
     return this.setState({
-      shouldShowUserDisplayNameInput: !this.state.shouldShowUserDisplayNameInput,
-    })
+      shouldShowUserDisplayNameInput: !shouldShowUserDisplayNameInput,
+    });
   };
 
   handleDisplayNameChange = e => {
     return this.setState({
       displayNameInput: e.target.value,
-    })
+    });
   };
 
   render() {
-    const {
-      displayName,
-      changeDisplayName,
-    } = this.props;
+    const { displayName, changeDisplayName } = this.props;
+    const { shouldShowUserDisplayNameInput, displayNameInput } = this.state;
     const menu = (
       <Menu>
         <Menu.Item onClick={() => this.handleInput()}>Change Display Name</Menu.Item>
@@ -47,15 +46,15 @@ class Header extends Component {
         </Title>
         <DisplayName>
           <span>
-            {this.state.shouldShowUserDisplayNameInput ? (
+            {shouldShowUserDisplayNameInput ? (
               <Input
                 type="text"
-                value={this.state.displayNameInput}
+                value={displayNameInput}
                 onChange={this.handleDisplayNameChange}
                 onPressEnter={() => {
-                  changeDisplayName(this.state.displayNameInput)
-                  this.handleInput()
-                  }}
+                  changeDisplayName(displayNameInput);
+                  this.handleInput();
+                }}
               />
             ) : (
               displayName

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Channel,
-  ChannelInfo,
-  ChannelTags,
-  MemberCount,
-  StyledTag,
-} from './styles';
+import { Channel, ChannelInfo, ChannelTags, MemberCount, StyledTag } from './styles';
 
 const ChannelList = ({ channels, currentChannelId, joinChannel }) => {
   const isActive = channelId => {
@@ -31,7 +25,7 @@ const ChannelList = ({ channels, currentChannelId, joinChannel }) => {
             <ChannelTags>
               {channel.tags &&
                 channel.tags.map((tag, index) => (
-                  <StyledTag key={index}>{tag}</StyledTag>
+                  <StyledTag key={`${tag}${index}`}>{tag}</StyledTag>
                 ))}
             </ChannelTags>
           </ChannelInfo>

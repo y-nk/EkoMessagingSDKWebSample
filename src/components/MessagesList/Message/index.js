@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
+
+// TODO: enable jsx-a11y rules back and fix issues.
+
 import React, { Component } from 'react';
 import { EkoSyncState, MessageRepository, UserRepository } from 'eko-sdk';
 import { message, Popover } from 'antd';
@@ -49,9 +53,7 @@ class Message extends Component {
     const { user, userId, data, messageId, syncState } = this.props;
     const userTitle =
       user && user.model
-        ? `${user.model.userId}${
-            user.model.displayName ? ` (${user.model.displayName})` : ''
-          }`
+        ? `${user.model.userId}${user.model.displayName ? ` (${user.model.displayName})` : ''}`
         : 'Loading...';
 
     const content = (
@@ -72,9 +74,7 @@ class Message extends Component {
     );
 
     return (
-      <MessageBlock
-        className={syncState === EkoSyncState.Synced ? 'fresh' : ''}
-      >
+      <MessageBlock className={syncState === EkoSyncState.Synced ? 'fresh' : ''}>
         <MessageTitle>{userTitle}:</MessageTitle>
         <MessageContent className="message-content">
           {syncState === 3 ? (

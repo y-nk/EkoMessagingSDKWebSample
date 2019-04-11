@@ -13,8 +13,9 @@ class Header extends Component {
   }
 
   handleInput = () => {
+    const { shouldShowUserDisplayNameInput } = this.state;
     return this.setState({
-      shouldShowUserDisplayNameInput: !this.state.shouldShowUserDisplayNameInput,
+      shouldShowUserDisplayNameInput: !shouldShowUserDisplayNameInput,
     });
   };
 
@@ -26,6 +27,7 @@ class Header extends Component {
 
   render() {
     const { displayName, changeDisplayName } = this.props;
+    const { shouldShowUserDisplayNameInput, displayNameInput } = this.state;
     const menu = (
       <Menu>
         <Menu.Item onClick={() => this.handleInput()}>Change Display Name</Menu.Item>
@@ -44,13 +46,13 @@ class Header extends Component {
         </Title>
         <DisplayName>
           <span>
-            {this.state.shouldShowUserDisplayNameInput ? (
+            {shouldShowUserDisplayNameInput ? (
               <Input
                 type="text"
-                value={this.state.displayNameInput}
+                value={displayNameInput}
                 onChange={this.handleDisplayNameChange}
                 onPressEnter={() => {
-                  changeDisplayName(this.state.displayNameInput);
+                  changeDisplayName(displayNameInput);
                   this.handleInput();
                 }}
               />

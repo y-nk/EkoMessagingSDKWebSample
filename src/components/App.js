@@ -54,7 +54,7 @@ class App extends PureComponent {
 
   // Change the display name of current user
   changeDisplayName = displayName => {
-    client.setDisplayName(displayName).catch(err => {
+    client.setDisplayName(displayName).catch(() => {
       message.error('Display Name Input Error');
     });
     this.setState({
@@ -70,19 +70,18 @@ class App extends PureComponent {
     const liveChannel = channelRepo.channelForId(channelId);
     // On dataUpdated, retrieve the channels
     liveChannel.on('dataUpdated', data => {
-      const channelIndex = this.state.channels.findIndex(
-        channel => channel.channelId === data.channelId,
-      );
+      const { channels } = this.state;
+      const channelIndex = channels.findIndex(channel => channel.channelId === data.channelId);
       if (channelIndex === -1) {
         this.setState({
-          channels: [...this.state.channels, ...[data]],
+          channels: [...channels, ...[data]],
         });
       } else {
         this.setState({
           channels: [
-            ...this.state.channels.slice(0, channelIndex),
-            { ...this.state.channels[channelIndex], ...data },
-            ...this.state.channels.slice(channelIndex + 1),
+            ...channels.slice(0, channelIndex),
+            { ...channels[channelIndex], ...data },
+            ...channels.slice(channelIndex + 1),
           ],
         });
       }
@@ -109,33 +108,29 @@ class App extends PureComponent {
       text,
     });
     // On message sent, run the following code.
-    messageLiveObject.on('dataStatusChanged', data => {
+    messageLiveObject.on('dataStatusChanged', () => {
       message.success('Message sent');
     });
   };
 
   render() {
+    const { displayName, currentChannelId, channels } = this.state;
     return (
       <Container>
-        <Header displayName={this.state.displayName} changeDisplayName={this.changeDisplayName} />
+        <Header displayName={displayName} changeDisplayName={this.changeDisplayName} />
         <Row>
           <ChannelList>
             <ChannelListPanel
-              channels={this.state.channels}
-              currentChannelId={this.state.currentChannelId}
+              channels={channels}
+              currentChannelId={currentChannelId}
               addChannel={this.addChannel}
               existingChannel={this.existingChannel}
               joinChannel={this.joinChannel}
             />
           </ChannelList>
           <MessageListPanel>
-            {this.state.currentChannelId && (
-              <MessageList currentChannelId={this.state.currentChannelId} />
-            )}
-            <AddMessage
-              sendMessage={this.sendMessage}
-              currentChannelId={this.state.currentChannelId}
-            />
+            {currentChannelId && <MessageList currentChannelId={currentChannelId} />}
+            <AddMessage sendMessage={this.sendMessage} currentChannelId={currentChannelId} />
           </MessageListPanel>
         </Row>
       </Container>

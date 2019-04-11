@@ -8,20 +8,28 @@ const ChannelPanel = styled.div`
   margin: 0;
 `;
 
-const ChannelListPanel = props => (
-  <ChannelPanel>
-    <AddChannel
-      channels={props.channels}
-      joinChannel={props.joinChannel}
-      addChannel={props.addChannel}
-      existingChannel={props.existingChannel}
-    />
-    <ChannelList
-      channels={props.channels}
-      joinChannel={props.joinChannel}
-      currentChannelId={props.currentChannelId}
-    />
-  </ChannelPanel>
-);
+function ChannelListPanel({
+  channels,
+  joinChannel,
+  addChannel,
+  existingChannel,
+  currentChannelId,
+}) {
+  return (
+    <ChannelPanel>
+      <AddChannel
+        channels={channels}
+        joinChannel={joinChannel}
+        addChannel={addChannel}
+        existingChannel={existingChannel}
+      />
+      <ChannelList
+        channels={channels}
+        joinChannel={joinChannel}
+        currentChannelId={currentChannelId}
+      />
+    </ChannelPanel>
+  );
+}
 
 export default ChannelListPanel;

@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
+
+// TODO: enable jsx-a11y rules back and fix issues.
+
 import React, { Component } from 'react';
 import { EkoSyncState, MessageRepository, UserRepository } from 'eko-sdk';
 import { message, Popover } from 'antd';

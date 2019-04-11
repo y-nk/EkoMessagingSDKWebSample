@@ -40,7 +40,8 @@ class MessagesList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.currentChannelId !== this.props.currentChannelId) {
+    const { currentChannelId } = this.props;
+    if (prevProps.currentChannelId !== currentChannelId) {
       this.resetMessageCollection();
     }
   }
@@ -51,10 +52,11 @@ class MessagesList extends Component {
 
   // Render messages in Channel
   resetMessageCollection = () => {
+    const { currentChannelId } = this.props;
     this.messageCollection && this.messageCollection.dispose();
     // Get messages in selected Channel
     this.messageCollection = this.messageRepo.messagesForChannel({
-      channelId: this.props.currentChannelId,
+      channelId: currentChannelId,
     });
 
     // Once message data is received, run the following code.

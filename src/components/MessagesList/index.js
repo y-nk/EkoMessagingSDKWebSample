@@ -69,7 +69,7 @@ class MessagesList extends Component {
         this.setState({ canLoadMore: false });
       }
     });
-  }
+  };
 
   render() {
     const { canLoadMore, messages } = this.state;
@@ -84,13 +84,9 @@ class MessagesList extends Component {
           isReverse
         >
           <MessageListPanel>
-            {messages.map(message => 
-                <Message
-                  key={message.messageId}
-                  {...message}
-                />
-              )
-            }
+            {messages.map(message => (
+              <Message key={message.messageId} {...message} />
+            ))}
           </MessageListPanel>
         </InfiniteScroll>
       </div>

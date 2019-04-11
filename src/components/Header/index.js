@@ -5,30 +5,27 @@ import { version } from '../../../package.json';
 
 class Header extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       displayNameInput: '',
       shouldShowUserDisplayNameInput: false,
-    }
+    };
   }
 
   handleInput = () => {
     return this.setState({
       shouldShowUserDisplayNameInput: !this.state.shouldShowUserDisplayNameInput,
-    })
+    });
   };
 
   handleDisplayNameChange = e => {
     return this.setState({
       displayNameInput: e.target.value,
-    })
+    });
   };
 
   render() {
-    const {
-      displayName,
-      changeDisplayName,
-    } = this.props;
+    const { displayName, changeDisplayName } = this.props;
     const menu = (
       <Menu>
         <Menu.Item onClick={() => this.handleInput()}>Change Display Name</Menu.Item>
@@ -53,9 +50,9 @@ class Header extends Component {
                 value={this.state.displayNameInput}
                 onChange={this.handleDisplayNameChange}
                 onPressEnter={() => {
-                  changeDisplayName(this.state.displayNameInput)
-                  this.handleInput()
-                  }}
+                  changeDisplayName(this.state.displayNameInput);
+                  this.handleInput();
+                }}
               />
             ) : (
               displayName

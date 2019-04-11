@@ -1,11 +1,7 @@
 import 'antd/dist/antd.css';
 
 import React, { PureComponent } from 'react';
-import EkoClient, {
-  MessageRepository,
-  ChannelRepository,
-  EkoChannelType,
-} from 'eko-sdk';
+import EkoClient, { MessageRepository, ChannelRepository, EkoChannelType } from 'eko-sdk';
 
 import { message } from 'antd';
 import { Container, Row, ChannelList, MessageListPanel } from './styles';
@@ -41,13 +37,13 @@ class App extends PureComponent {
 
   componentDidMount() {
     // Establish current user (only for demo purpose)
-    const currentUser = client.currentUser;
+    const { currentUser } = client;
 
     // On current user data update, set current display name
     currentUser.on('dataUpdated', model =>
       this.setState({
         displayName: model.displayName,
-      })
+      }),
     );
 
     // Get channel tags for each channel
@@ -67,9 +63,7 @@ class App extends PureComponent {
   };
 
   existingChannel = (value, channels) =>
-    channels.some(
-      channel => channel.channelId.toLowerCase() === value.toLowerCase()
-    );
+    channels.some(channel => channel.channelId.toLowerCase() === value.toLowerCase());
 
   // Add channel to local state
   addChannel = channelId => {
@@ -77,7 +71,7 @@ class App extends PureComponent {
     // On dataUpdated, retrieve the channels
     liveChannel.on('dataUpdated', data => {
       const channelIndex = this.state.channels.findIndex(
-        channel => channel.channelId === data.channelId
+        channel => channel.channelId === data.channelId,
       );
       if (channelIndex === -1) {
         this.setState({
@@ -123,10 +117,7 @@ class App extends PureComponent {
   render() {
     return (
       <Container>
-        <Header
-          displayName={this.state.displayName}
-          changeDisplayName={this.changeDisplayName}
-        />
+        <Header displayName={this.state.displayName} changeDisplayName={this.changeDisplayName} />
         <Row>
           <ChannelList>
             <ChannelListPanel

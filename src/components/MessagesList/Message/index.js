@@ -49,9 +49,7 @@ class Message extends Component {
     const { user, userId, data, messageId, syncState } = this.props;
     const userTitle =
       user && user.model
-        ? `${user.model.userId}${
-            user.model.displayName ? ` (${user.model.displayName})` : ''
-          }`
+        ? `${user.model.userId}${user.model.displayName ? ` (${user.model.displayName})` : ''}`
         : 'Loading...';
 
     const content = (
@@ -72,9 +70,7 @@ class Message extends Component {
     );
 
     return (
-      <MessageBlock
-        className={syncState === EkoSyncState.Synced ? 'fresh' : ''}
-      >
+      <MessageBlock className={syncState === EkoSyncState.Synced ? 'fresh' : ''}>
         <MessageTitle>{userTitle}:</MessageTitle>
         <MessageContent className="message-content">
           {syncState === 3 ? (

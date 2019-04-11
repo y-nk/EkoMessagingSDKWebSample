@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Icon, Dropdown } from 'antd'
+import { Icon, Dropdown } from 'antd';
 
 export const HeaderContainer = styled.div`
   height: 50px;

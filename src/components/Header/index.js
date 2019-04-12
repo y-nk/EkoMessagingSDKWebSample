@@ -14,9 +14,16 @@ class Header extends Component {
 
   handleInput = () => {
     const { shouldShowUserDisplayNameInput } = this.state;
-    return this.setState({
+    this.setState({
       shouldShowUserDisplayNameInput: !shouldShowUserDisplayNameInput,
     });
+  };
+
+  handleChangeUser = e => {
+    if (!e) return;
+    const { changeUser } = this.props;
+    const { key: userId } = e;
+    changeUser(userId, `${userId}_name`);
   };
 
   handleDisplayNameChange = e => {
@@ -32,10 +39,13 @@ class Header extends Component {
       <Menu>
         <Menu.Item onClick={() => this.handleInput()}>Change Display Name</Menu.Item>
         <Menu.Divider />
-        <Menu.Item disabled>
-          Version
-          {version}
-        </Menu.Item>
+        <Menu.SubMenu title="Change User" onClick={this.handleChangeUser}>
+          <Menu.Item key="web_switch_user_1">web_switch_user_1_name</Menu.Item>
+          <Menu.Item key="web_switch_user_2">web_switch_user_2_name</Menu.Item>
+          <Menu.Item key="web_switch_user_3">web_switch_user_3_name</Menu.Item>
+        </Menu.SubMenu>
+        <Menu.Divider />
+        <Menu.Item disabled>Version {version}</Menu.Item>
       </Menu>
     );
 

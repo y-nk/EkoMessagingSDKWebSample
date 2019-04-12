@@ -1,7 +1,12 @@
 import 'antd/dist/antd.css';
 
 import React, { PureComponent } from 'react';
-import EkoClient, { MessageRepository, ChannelRepository, EkoChannelType } from 'eko-sdk';
+import EkoClient, {
+  MessageRepository,
+  ChannelRepository,
+  EkoChannelType,
+  EkoConnectionStatus,
+} from 'eko-sdk';
 
 import { message } from 'antd';
 import { Container, Row, ChannelList, MessageListPanel } from './styles';
@@ -40,17 +45,39 @@ class App extends PureComponent {
     const { currentUser } = client;
 
     // On current user data update, set current display name
-    currentUser.on('dataUpdated', model =>
-      this.setState({
-        displayName: model.displayName,
-      }),
-    );
+    currentUser.on('dataUpdated', model => this.setState({ displayName: model.displayName }));
 
     // Get channel tags for each channel
     staticChanelIdsList.forEach(channelId => {
       this.addChannel(channelId);
     });
   }
+
+  changeUser = (newUserId, newDisplayName = '') => {
+    if (!newUserId) return;
+
+    const { currentChannelId } = this.state;
+    const bufferForChannelId = currentChannelId;
+    this.setState({ currentChannelId: null });
+
+    client.on('connectionStatusChanged', ({ newValue }) => {
+      if (newValue === EkoConnectionStatus.Connected) {
+        const { currentUser } = client;
+
+        // On current user data update, set current display name
+        currentUser.on('dataUpdated', model => {
+          this.setState({ displayName: model.displayName });
+        });
+
+        this.setState({ currentChannelId: bufferForChannelId });
+        client.removeAllListeners('connectionStatusChanged');
+      }
+    });
+
+    client.unregisterSession();
+
+    client.registerSession({ userId: newUserId, displayName: newDisplayName });
+  };
 
   // Change the display name of current user
   changeDisplayName = displayName => {
@@ -117,7 +144,11 @@ class App extends PureComponent {
     const { displayName, currentChannelId, channels } = this.state;
     return (
       <Container>
-        <Header displayName={displayName} changeDisplayName={this.changeDisplayName} />
+        <Header
+          displayName={displayName}
+          changeDisplayName={this.changeDisplayName}
+          changeUser={this.changeUser}
+        />
         <Row>
           <ChannelList>
             <ChannelListPanel

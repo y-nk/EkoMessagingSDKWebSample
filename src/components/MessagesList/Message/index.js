@@ -44,7 +44,7 @@ class Message extends Component {
 
   // Unflag user
   unflagUser = userId => {
-    this.userRepo.flag({ userId }).then(() => {
+    this.userRepo.unflag({ userId }).then(() => {
       message.info('User Unflagged');
     });
   };

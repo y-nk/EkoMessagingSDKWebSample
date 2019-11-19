@@ -35,7 +35,7 @@ class App extends PureComponent {
   state = {
     displayName: '',
     channels: [],
-    currentChannelId: 'newChannel',
+    currentChannelId: '',
   };
 
   componentDidMount() {
@@ -131,6 +131,7 @@ class App extends PureComponent {
     });
   };
 
+  // Leave selected channel
   leaveChannel = channelId => {
     const { channels } = this.state;
     const channelMembershipRepo = new ChannelMembershipRepository(channelId);

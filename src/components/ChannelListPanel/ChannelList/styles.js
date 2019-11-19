@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { Tag, Icon } from 'antd';
+import { Tag, Button } from 'antd';
 
 export const Channel = styled.div`
   position: relative;
   border-bottom: 1px solid #e6e6e6;
-  cursor: pointer;
   margin: 0;
 `;
 
@@ -40,8 +39,16 @@ export const MemberCount = styled.p`
   font-size: 12px;
 `;
 
-export const StyledIcon = styled(Icon)`
+export const StyledButton = styled(Button)`
+  font-size: 12px;
   position: absolute;
-  right: 5px;
-  top: 40%;
+  right: 10px;
+  bottom: 10px;
+`;
+
+export const StyledButtonTop = styled(Button)`
+  font-size: 12px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
 `;

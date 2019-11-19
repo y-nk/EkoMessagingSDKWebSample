@@ -103,6 +103,7 @@ class Message extends Component {
               {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
             </MessageBubble>
           )}
+          <StyledIcon type="edit" theme="filled" />
           <Popover content={content} placement="right" trigger={['click']}>
             <StyledIcon type="exclamation-circle" theme="filled" />
           </Popover>

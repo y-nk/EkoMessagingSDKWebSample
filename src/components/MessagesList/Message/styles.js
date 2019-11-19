@@ -11,7 +11,17 @@ export const MessageTitle = styled.p`
   margin: 0;
 `;
 
-export const MessageContent = styled.span``;
+export const MessageContent = styled.span`
+  &:hover {
+    .anticon-exclamation-circle {
+      opacity: 1;
+      color: red;
+    }
+    .anticon-edit {
+      opacity: 1;
+    }
+  }
+`;
 
 export const FlagContent = styled.div`
   p {

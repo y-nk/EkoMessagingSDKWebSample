@@ -30,9 +30,6 @@ const channelRepo = new ChannelRepository();
 // Instantiate Message Repository
 const messageRepo = new MessageRepository();
 
-// Set up static channels
-const staticChanelIdsList = ['newChannel', 'ANDROID', 'public_eko'];
-
 class App extends PureComponent {
   state = {
     displayName: '',
@@ -47,9 +44,12 @@ class App extends PureComponent {
     // On current user data update, set current display name
     currentUser.on('dataUpdated', model => this.setState({ displayName: model.displayName }));
 
-    // Get channel tags for each channel
-    staticChanelIdsList.forEach(channelId => {
-      this.addChannel(channelId);
+    const channels = channelRepo.allChannels();
+
+    channels.on('dataUpdated', models => {
+      models.forEach(channel => {
+        this.addChannel(channel.channelId);
+      });
     });
   }
 

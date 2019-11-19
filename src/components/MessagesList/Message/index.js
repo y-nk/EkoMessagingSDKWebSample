@@ -81,7 +81,7 @@ class Message extends Component {
             'Deleted...'
           ) : (
             <MessageBubble className="message-bubble">
-              {data.text}
+              {data && data.text}
               {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
             </MessageBubble>
           )}

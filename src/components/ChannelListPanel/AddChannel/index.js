@@ -1,30 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class AddChannel extends Component {
-  render() {
-    let input;
-    const { existingChannel, channels, addChannel, joinChannel } = this.props;
-    return (
-      <section id="add-channel">
-        <input
-          placeholder="Add Channel"
-          onKeyPress={e => {
-            if (e.key === 'Enter' && input.value !== '') {
-              if (!existingChannel(input.value, channels)) {
-                addChannel(input.value);
-                joinChannel(input.value);
-                input.value = '';
-              }
+function AddChannel({ existingChannel, channels, addChannel, joinChannel }) {
+  return (
+    <section id="add-channel">
+      <input
+        placeholder="Join Channel"
+        onKeyPress={e => {
+          if (e.key === 'Enter') {
+            if (!existingChannel(e.target.value, channels)) {
+              addChannel(e.target.value);
+              joinChannel(e.target.value);
             }
-          }}
-          type="text"
-          ref={node => {
-            input = node;
-          }}
-        />
-      </section>
-    );
-  }
+          }
+        }}
+        type="text"
+      />
+    </section>
+  );
 }
 
 export default AddChannel;

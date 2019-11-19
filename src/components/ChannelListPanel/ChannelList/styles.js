@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { Tag } from 'antd';
+import { Tag, Icon } from 'antd';
 
 export const Channel = styled.div`
+  position: relative;
   border-bottom: 1px solid #e6e6e6;
   cursor: pointer;
   margin: 0;
@@ -37,4 +38,10 @@ export const MemberCount = styled.p`
   margin: 0;
   padding: 10px 0;
   font-size: 12px;
+`;
+
+export const StyledIcon = styled(Icon)`
+  position: absolute;
+  right: 5px;
+  top: 40%;
 `;

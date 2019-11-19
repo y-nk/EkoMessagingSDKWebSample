@@ -49,8 +49,26 @@ class Message extends Component {
     });
   };
 
+  renderMessage = () => {
+    const { data, type } = this.props;
+    switch (type) {
+      case 'text':
+        return data.text;
+
+      case 'image':
+      case 'file':
+        return 'Unsupported message format';
+
+      case 'custom':
+        return JSON.stringify(data);
+
+      default:
+        return 'Unsupported message format';
+    }
+  };
+
   render() {
-    const { user, userId, data, messageId, syncState } = this.props;
+    const { user, userId, messageId, syncState } = this.props;
     const userTitle =
       user && user.model
         ? `${user.model.userId}${user.model.displayName ? ` (${user.model.displayName})` : ''}`
@@ -81,7 +99,7 @@ class Message extends Component {
             'Deleted...'
           ) : (
             <MessageBubble className="message-bubble">
-              {data && data.text}
+              {this.renderMessage()}
               {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
             </MessageBubble>
           )}

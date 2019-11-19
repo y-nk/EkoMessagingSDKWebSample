@@ -1,19 +1,14 @@
 import React from 'react';
-import { Channel, ChannelInfo, ChannelTags, MemberCount, StyledTag } from './styles';
+import { Channel, ChannelInfo, ChannelTags, MemberCount, StyledTag, StyledIcon } from './styles';
 
-const ChannelList = ({ channels, currentChannelId, joinChannel }) => {
-  const isActive = channelId => {
-    if (currentChannelId === channelId) {
-      return 'active';
-    }
-    return 'inactive';
-  };
-
+const ChannelList = ({ channels, currentChannelId, joinChannel, leaveChannel }) => {
   return (
     <ul>
       {channels.map(channel => (
         <Channel
-          className={`channel-tab ${isActive(channel.channelId)}`}
+          className={`channel-tab ${
+            currentChannelId === channel.channelId ? 'active' : 'inactive'
+          }`}
           key={channel.channelId}
           onClick={() => joinChannel(channel.channelId)}
         >
@@ -26,6 +21,7 @@ const ChannelList = ({ channels, currentChannelId, joinChannel }) => {
               {channel.tags && channel.tags.map(tag => <StyledTag key={tag}>{tag}</StyledTag>)}
             </ChannelTags>
           </ChannelInfo>
+          <StyledIcon type="logout" onClick={() => leaveChannel(channel.channelId)} />
         </Channel>
       ))}
     </ul>

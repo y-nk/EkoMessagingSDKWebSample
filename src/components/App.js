@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import EkoClient, {
   MessageRepository,
   ChannelRepository,
+  ChannelMembershipRepository,
   EkoChannelType,
   EkoConnectionStatus,
 } from 'eko-sdk';
@@ -44,8 +45,10 @@ class App extends PureComponent {
     // On current user data update, set current display name
     currentUser.on('dataUpdated', model => this.setState({ displayName: model.displayName }));
 
+    // Get all channels that user is a member of
     const channels = channelRepo.allChannels();
 
+    // Add all channels to the channel list
     channels.on('dataUpdated', models => {
       models.forEach(channel => {
         this.addChannel(channel.channelId);
@@ -122,9 +125,22 @@ class App extends PureComponent {
       channelId,
       type: EkoChannelType.Standard,
     });
+
     this.setState({
       currentChannelId: channelId,
     });
+  };
+
+  leaveChannel = channelId => {
+    const { channels } = this.state;
+    const channelMembershipRepo = new ChannelMembershipRepository(channelId);
+
+    if (channelMembershipRepo) {
+      channelMembershipRepo.leave().then(() => {
+        const newChannelList = channels.filter(channel => channel.channelId !== channelId);
+        this.setState({ channels: newChannelList });
+      });
+    }
   };
 
   // Send message in channel
@@ -157,6 +173,7 @@ class App extends PureComponent {
               addChannel={this.addChannel}
               existingChannel={this.existingChannel}
               joinChannel={this.joinChannel}
+              leaveChannel={this.leaveChannel}
             />
           </ChannelList>
           <MessageListPanel>

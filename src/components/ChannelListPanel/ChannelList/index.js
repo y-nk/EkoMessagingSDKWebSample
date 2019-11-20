@@ -28,12 +28,13 @@ const ChannelList = ({ channels, currentChannelId, joinChannel, leaveChannel }) 
               {channel.tags && channel.tags.map(tag => <StyledTag key={tag}>{tag}</StyledTag>)}
             </ChannelTags>
           </ChannelInfo>
-          {currentChannelId !== channel.channelId && (
+          {currentChannelId !== channel.channelId ? (
             <StyledButtonTop type="primary" onClick={() => joinChannel(channel.channelId)}>
               Join
             </StyledButtonTop>
+          ) : (
+            <StyledButton onClick={() => leaveChannel(channel.channelId)}>Leave</StyledButton>
           )}
-          <StyledButton onClick={() => leaveChannel(channel.channelId)}>Leave</StyledButton>
         </Channel>
       ))}
     </ul>

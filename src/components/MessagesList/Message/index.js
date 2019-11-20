@@ -3,8 +3,8 @@
 // TODO: enable jsx-a11y rules back and fix issues.
 
 import React, { Component } from 'react';
-import { EkoSyncState, MessageRepository, UserRepository } from 'eko-sdk';
-import { message, Popover } from 'antd';
+import { EkoSyncState, MessageRepository, UserRepository, MessageEditorRepository } from 'eko-sdk';
+import { message, Popover, Tooltip } from 'antd';
 import {
   FlagContent,
   MessageBlock,
@@ -12,6 +12,7 @@ import {
   MessageContent,
   MessageBubble,
   StyledIcon,
+  StyledInput,
 } from './styles';
 
 class Message extends Component {
@@ -19,6 +20,10 @@ class Message extends Component {
     super(props);
     this.messageRepo = new MessageRepository();
     this.userRepo = new UserRepository();
+    this.state = {
+      isEditing: false,
+      editor: null,
+    };
   }
 
   // Flag message
@@ -67,8 +72,28 @@ class Message extends Component {
     }
   };
 
+  toggleEditor = () => {
+    const { messageId } = this.props;
+    const { isEditing } = this.state;
+    const editor = new MessageEditorRepository(messageId);
+    if (editor) {
+      this.setState({ isEditing: !isEditing, editor });
+    }
+  };
+
+  editText = text => {
+    const { editor, isEditing } = this.state;
+    editor
+      .editText(text)
+      .catch(() => {
+        message.error('There was an error processing your request');
+      })
+      .then(() => this.setState({ isEditing: !isEditing }));
+  };
+
   render() {
-    const { user, userId, messageId, syncState } = this.props;
+    const { user, userId, messageId, syncState, currentUserId, data } = this.props;
+    const { isEditing } = this.state;
     const userTitle =
       user && user.model
         ? `${user.model.userId}${user.model.displayName ? ` (${user.model.displayName})` : ''}`
@@ -103,9 +128,22 @@ class Message extends Component {
               {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
             </MessageBubble>
           )}
-          <StyledIcon type="edit" theme="filled" />
+          {isEditing && (
+            <StyledInput
+              type="text"
+              defaultValue={data.text || ''}
+              onPressEnter={e => this.editText(e.target.value)}
+            />
+          )}
+          {userId === currentUserId && (
+            <Tooltip placement="top" title="Edit Message">
+              <StyledIcon type="edit" onClick={this.toggleEditor} theme="filled" />
+            </Tooltip>
+          )}
           <Popover content={content} placement="right" trigger={['click']}>
-            <StyledIcon type="exclamation-circle" theme="filled" />
+            <Tooltip placement="top" title="Action">
+              <StyledIcon type="exclamation-circle" theme="filled" />
+            </Tooltip>
           </Popover>
         </MessageContent>
       </MessageBlock>

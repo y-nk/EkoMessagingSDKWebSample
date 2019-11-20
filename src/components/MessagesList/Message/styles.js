@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Icon } from 'antd';
+import { Icon, Input } from 'antd';
 
 export const MessageBlock = styled.div`
   padding: 6px 16px 6px 0;
@@ -53,4 +53,9 @@ export const StyledIcon = styled(Icon)`
   margin-left: 10px;
   opacity: 0;
   cursor: pointer;
+`;
+
+export const StyledInput = styled(Input)`
+  margin: 0 5px;
+  width: 100px;
 `;

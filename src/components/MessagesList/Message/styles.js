@@ -12,6 +12,9 @@ export const MessageTitle = styled.p`
 `;
 
 export const MessageContent = styled.span`
+  .anticon-delete {
+    opacity: 1;
+  }
   &:hover {
     .anticon-exclamation-circle {
       opacity: 1;

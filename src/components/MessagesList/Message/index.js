@@ -2,7 +2,7 @@
 
 // TODO: enable jsx-a11y rules back and fix issues.
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { EkoSyncState, MessageRepository, UserRepository, MessageEditorRepository } from 'eko-sdk';
 import { message, Popover, Tooltip } from 'antd';
 import {
@@ -91,6 +91,11 @@ class Message extends Component {
       .then(() => this.setState({ isEditing: !isEditing }));
   };
 
+  deleteText = () => {
+    const { editor, isEditing } = this.state;
+    editor.delete().then(() => this.setState({ isEditing: !isEditing }));
+  };
+
   render() {
     const { user, userId, messageId, syncState, currentUserId, data } = this.props;
     const { isEditing } = this.state;
@@ -129,11 +134,16 @@ class Message extends Component {
             </MessageBubble>
           )}
           {isEditing && (
-            <StyledInput
-              type="text"
-              defaultValue={data.text || ''}
-              onPressEnter={e => this.editText(e.target.value)}
-            />
+            <Fragment>
+              <StyledInput
+                type="text"
+                defaultValue={data.text || ''}
+                onPressEnter={e => this.editText(e.target.value)}
+              />
+              <Tooltip placement="top" title="Delete Message">
+                <StyledIcon type="delete" onClick={this.deleteText} theme="filled" />
+              </Tooltip>
+            </Fragment>
           )}
           {userId === currentUserId && (
             <Tooltip placement="top" title="Edit Message">

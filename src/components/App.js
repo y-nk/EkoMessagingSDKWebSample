@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import EkoClient, {
   MessageRepository,
   ChannelRepository,
+  ChannelMembershipRepository,
   EkoChannelType,
   EkoConnectionStatus,
 } from 'eko-sdk';
@@ -30,14 +31,13 @@ const channelRepo = new ChannelRepository();
 // Instantiate Message Repository
 const messageRepo = new MessageRepository();
 
-// Set up static channels
-const staticChanelIdsList = ['newChannel', 'ANDROID', 'public_eko'];
-
 class App extends PureComponent {
   state = {
+    userId: '',
     displayName: '',
     channels: [],
-    currentChannelId: 'newChannel',
+    currentChannelId: '',
+    channelMembership: null,
   };
 
   componentDidMount() {
@@ -45,11 +45,18 @@ class App extends PureComponent {
     const { currentUser } = client;
 
     // On current user data update, set current display name
-    currentUser.on('dataUpdated', model => this.setState({ displayName: model.displayName }));
+    currentUser.on('dataUpdated', model =>
+      this.setState({ userId: model.userId, displayName: model.displayName }),
+    );
 
-    // Get channel tags for each channel
-    staticChanelIdsList.forEach(channelId => {
-      this.addChannel(channelId);
+    // Get all channels that user is a member of
+    const channels = channelRepo.allChannels();
+
+    // Add all channels to the channel list
+    channels.on('dataUpdated', models => {
+      models.forEach(channel => {
+        this.addChannel(channel.channelId);
+      });
     });
   }
 
@@ -117,14 +124,41 @@ class App extends PureComponent {
 
   // Join selected channel
   joinChannel = channelId => {
+    // If already member of channel, stop reading that channel first
+    const { channelMembership } = this.state;
+    if (channelMembership) {
+      channelMembership.stopReading();
+    }
+
     // Join channel
     channelRepo.joinChannel({
       channelId,
       type: EkoChannelType.Standard,
     });
+
+    // Join the channel membership
+    const channelMembershipRepo = new ChannelMembershipRepository(channelId);
+
+    // Start reading channel membership
+    channelMembershipRepo.startReading();
+
     this.setState({
       currentChannelId: channelId,
+      channelMembership: channelMembershipRepo,
     });
+  };
+
+  // Leave selected channel
+  leaveChannel = () => {
+    const { channelMembership } = this.state;
+
+    if (channelMembership) {
+      // Stop reading channel membership
+      channelMembership.stopReading();
+      channelMembership.leave().then(() => {
+        this.setState({ currentChannelId: '' });
+      });
+    }
   };
 
   // Send message in channel
@@ -141,7 +175,7 @@ class App extends PureComponent {
   };
 
   render() {
-    const { displayName, currentChannelId, channels } = this.state;
+    const { displayName, currentChannelId, channels, userId } = this.state;
     return (
       <Container>
         <Header
@@ -155,12 +189,15 @@ class App extends PureComponent {
               channels={channels}
               currentChannelId={currentChannelId}
               addChannel={this.addChannel}
-              existingChannel={this.existingChannel}
               joinChannel={this.joinChannel}
+              leaveChannel={this.leaveChannel}
+              existingChannel={this.existingChannel}
             />
           </ChannelList>
           <MessageListPanel>
-            {currentChannelId && <MessageList currentChannelId={currentChannelId} />}
+            {currentChannelId && (
+              <MessageList currentUserId={userId} currentChannelId={currentChannelId} />
+            )}
             <AddMessage sendMessage={this.sendMessage} currentChannelId={currentChannelId} />
           </MessageListPanel>
         </Row>

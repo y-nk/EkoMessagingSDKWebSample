@@ -1,6 +1,6 @@
-import 'antd/dist/antd.css';
-
-import React, { PureComponent } from 'react';
+/* eslint-disable react/no-this-in-sfc */
+import React, { useEffect } from 'react';
+import { message } from 'antd';
 import EkoClient, {
   MessageRepository,
   ChannelRepository,
@@ -9,13 +9,15 @@ import EkoClient, {
   EkoConnectionStatus,
 } from 'eko-sdk';
 
-import { message } from 'antd';
-import { Container, Row, ChannelList, MessageListPanel } from './styles';
+import { StateProvider } from '../state';
+import reducer from '../reducers';
 import SdkConfig from '../sdk-config';
 import ChannelListPanel from './ChannelListPanel';
 import MessageList from './MessagesList';
 import AddMessage from './MessagesList/AddMessage';
 import Header from './Header';
+
+import { Container, Row, ChannelList, MessageListPanel } from './styles';
 
 // Connect to EkoClient with apiKey
 const client = new EkoClient({ apiKey: SdkConfig.SAMPLE_APP_KEY });
@@ -31,36 +33,50 @@ const channelRepo = new ChannelRepository();
 // Instantiate Message Repository
 const messageRepo = new MessageRepository();
 
-class App extends PureComponent {
-  state = {
-    userId: '',
-    displayName: '',
-    channels: [],
-    currentChannelId: '',
-    channelMembership: null,
-  };
+// Create initial state for application
+const initialState = {
+  currentChannelId: '',
+  user: { userId: ' ', displayName: '' },
+  repo: {
+    channelMembershipRepo: null,
+    channelRepo,
+    messageRepo,
+  },
+  channels: [],
+};
 
-  componentDidMount() {
-    // Establish current user (only for demo purpose)
-    const { currentUser } = client;
+function App() {
+  // state = {
+  //   userId: '',
+  //   displayName: '',
+  //   channels: [],
+  //   currentChannelId: '',
+  //   channelMembership: null,
+  // };
 
-    // On current user data update, set current display name
-    currentUser.on('dataUpdated', model =>
-      this.setState({ userId: model.userId, displayName: model.displayName }),
-    );
+  // componentDidMount() {
+  //   // Establish current user (only for demo purpose)
+  //   const { currentUser } = client;
 
-    // Get all channels that user is a member of
-    const channels = channelRepo.allChannels();
+  //   // On current user data update, set current display name
+  //   currentUser.on('dataUpdated', model =>
+  //     this.setState({ userId: model.userId, displayName: model.displayName }),
+  //   );
 
-    // Add all channels to the channel list
-    channels.on('dataUpdated', models => {
-      models.forEach(channel => {
-        this.addChannel(channel.channelId);
-      });
-    });
-  }
+  //   // Get all channels that user is a member of
+  //   const channels = channelRepo.allChannels();
 
-  changeUser = (newUserId, newDisplayName = '') => {
+  //   // Add all channels to the channel list
+  //   channels.on('dataUpdated', models => {
+  //     models.forEach(channel => {
+  //       this.addChannel(channel.channelId);
+  //     });
+  //   });
+  // }
+
+  useEffect(() => {}, []);
+
+  const changeUser = (newUserId, newDisplayName = '') => {
     if (!newUserId) return;
 
     const { currentChannelId } = this.state;
@@ -87,7 +103,7 @@ class App extends PureComponent {
   };
 
   // Change the display name of current user
-  changeDisplayName = displayName => {
+  const changeDisplayName = displayName => {
     client.setDisplayName(displayName).catch(() => {
       message.error('Display Name Input Error');
     });
@@ -96,11 +112,11 @@ class App extends PureComponent {
     });
   };
 
-  existingChannel = (value, channels) =>
+  const existingChannel = (value, channels) =>
     channels.some(channel => channel.channelId.toLowerCase() === value.toLowerCase());
 
   // Add channel to local state
-  addChannel = channelId => {
+  const addChannel = channelId => {
     const liveChannel = channelRepo.channelForId(channelId);
     // On dataUpdated, retrieve the channels
     liveChannel.on('dataUpdated', data => {
@@ -123,7 +139,7 @@ class App extends PureComponent {
   };
 
   // Join selected channel
-  joinChannel = channelId => {
+  const joinChannel = channelId => {
     // If already member of channel, stop reading that channel first
     const { channelMembership } = this.state;
     if (channelMembership) {
@@ -149,7 +165,7 @@ class App extends PureComponent {
   };
 
   // Leave selected channel
-  leaveChannel = () => {
+  const leaveChannel = () => {
     const { channelMembership } = this.state;
 
     if (channelMembership) {
@@ -162,7 +178,7 @@ class App extends PureComponent {
   };
 
   // Send message in channel
-  sendMessage = (text, channelId) => {
+  const sendMessage = (text, channelId) => {
     // Send message
     const messageLiveObject = messageRepo.createTextMessage({
       channelId,
@@ -174,36 +190,37 @@ class App extends PureComponent {
     });
   };
 
-  render() {
-    const { displayName, currentChannelId, channels, userId } = this.state;
-    return (
+  const { displayName, currentChannelId, channels, userId } = this.state;
+
+  return (
+    <StateProvider initialState={initialState} reducer={reducer}>
       <Container>
         <Header
           displayName={displayName}
-          changeDisplayName={this.changeDisplayName}
-          changeUser={this.changeUser}
+          changeDisplayName={changeDisplayName}
+          changeUser={changeUser}
         />
         <Row>
           <ChannelList>
             <ChannelListPanel
               channels={channels}
               currentChannelId={currentChannelId}
-              addChannel={this.addChannel}
-              joinChannel={this.joinChannel}
-              leaveChannel={this.leaveChannel}
-              existingChannel={this.existingChannel}
+              addChannel={addChannel}
+              joinChannel={joinChannel}
+              leaveChannel={leaveChannel}
+              existingChannel={existingChannel}
             />
           </ChannelList>
           <MessageListPanel>
             {currentChannelId && (
               <MessageList currentUserId={userId} currentChannelId={currentChannelId} />
             )}
-            <AddMessage sendMessage={this.sendMessage} currentChannelId={currentChannelId} />
+            <AddMessage sendMessage={sendMessage} currentChannelId={currentChannelId} />
           </MessageListPanel>
         </Row>
       </Container>
-    );
-  }
+    </StateProvider>
+  );
 }
 
 export default App;

@@ -11,6 +11,7 @@ const ChannelPanel = styled.div`
 function ChannelListPanel({
   channels,
   joinChannel,
+  leaveChannel,
   addChannel,
   existingChannel,
   currentChannelId,
@@ -26,6 +27,7 @@ function ChannelListPanel({
       <ChannelList
         channels={channels}
         joinChannel={joinChannel}
+        leaveChannel={leaveChannel}
         currentChannelId={currentChannelId}
       />
     </ChannelPanel>

@@ -7,15 +7,17 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayNameInput: '',
-      shouldShowUserDisplayNameInput: false,
+      input: '',
+      isMetadata: false,
+      shouldShowInput: false,
     };
   }
 
-  handleInput = () => {
-    const { shouldShowUserDisplayNameInput } = this.state;
+  toggleInput = value => {
+    const { shouldShowInput } = this.state;
     this.setState({
-      shouldShowUserDisplayNameInput: !shouldShowUserDisplayNameInput,
+      input: value,
+      shouldShowInput: !shouldShowInput,
     });
   };
 
@@ -28,16 +30,29 @@ class Header extends Component {
 
   handleDisplayNameChange = e => {
     return this.setState({
-      displayNameInput: e.target.value,
+      input: e.target.value,
     });
   };
 
   render() {
-    const { displayName, changeDisplayName } = this.props;
-    const { shouldShowUserDisplayNameInput, displayNameInput } = this.state;
+    const { displayName, changeDisplayName, changeUserMetadata, metadata } = this.props;
+    const { shouldShowInput, input, isMetadata } = this.state;
     const menu = (
       <Menu>
-        <Menu.Item onClick={() => this.handleInput()}>Change Display Name</Menu.Item>
+        <Menu.Item onClick={() => this.toggleInput(displayName)}>Change Display Name</Menu.Item>
+        <Menu.Divider />
+        <Menu.SubMenu title="User Metadata">
+          <Menu.Item disabled>{JSON.stringify(metadata)}</Menu.Item>
+          <Menu.Divider />
+          <Menu.Item
+            onClick={() => {
+              this.setState({ isMetadata: true });
+              this.toggleInput(JSON.stringify(metadata));
+            }}
+          >
+            Change Metadata
+          </Menu.Item>
+        </Menu.SubMenu>
         <Menu.Divider />
         <Menu.SubMenu title="Change User" onClick={this.handleChangeUser}>
           <Menu.Item key="web_switch_user_1">web_switch_user_1_name</Menu.Item>
@@ -56,14 +71,19 @@ class Header extends Component {
         </Title>
         <DisplayName>
           <span>
-            {shouldShowUserDisplayNameInput ? (
+            {shouldShowInput ? (
               <Input
                 type="text"
-                value={displayNameInput}
+                defaultValue={input}
                 onChange={this.handleDisplayNameChange}
                 onPressEnter={() => {
-                  changeDisplayName(displayNameInput);
-                  this.handleInput();
+                  if (isMetadata) {
+                    changeUserMetadata(input);
+                  } else {
+                    changeDisplayName(input);
+                  }
+                  this.toggleInput('');
+                  this.setState({ isMetadata: false });
                 }}
               />
             ) : (

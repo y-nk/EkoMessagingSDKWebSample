@@ -33,8 +33,7 @@ const messageRepo = new MessageRepository();
 
 class App extends PureComponent {
   state = {
-    userId: '',
-    displayName: '',
+    user: {},
     channels: [],
     currentChannelId: '',
     channelMembership: null,
@@ -45,9 +44,7 @@ class App extends PureComponent {
     const { currentUser } = client;
 
     // On current user data update, set current display name
-    currentUser.on('dataUpdated', model =>
-      this.setState({ userId: model.userId, displayName: model.displayName }),
-    );
+    currentUser.on('dataUpdated', model => this.setState({ user: model }));
 
     // Get all channels that user is a member of
     const channels = channelRepo.allChannels();
@@ -73,7 +70,7 @@ class App extends PureComponent {
 
         // On current user data update, set current display name
         currentUser.on('dataUpdated', model => {
-          this.setState({ displayName: model.displayName });
+          this.setState({ user: model });
         });
 
         this.setState({ currentChannelId: bufferForChannelId });
@@ -88,12 +85,29 @@ class App extends PureComponent {
 
   // Change the display name of current user
   changeDisplayName = displayName => {
+    const { user } = this.state;
     client.setDisplayName(displayName).catch(() => {
       message.error('Display Name Input Error');
     });
     this.setState({
-      displayName,
+      user: { ...user, displayName },
     });
+  };
+
+  // Change the metadata of current user
+  changeUserMetadata = metadata => {
+    const { user } = this.state;
+    try {
+      const newMetadata = JSON.parse(metadata);
+      client.setUserMetadata(newMetadata).catch(() => {
+        message.error('Metadata Input Error');
+      });
+      this.setState({
+        user: { ...user, metadata: newMetadata },
+      });
+    } catch (err) {
+      message.error('Input Error: Invalid Metadata');
+    }
   };
 
   existingChannel = (value, channels) =>
@@ -175,13 +189,16 @@ class App extends PureComponent {
   };
 
   render() {
-    const { displayName, currentChannelId, channels, userId } = this.state;
+    const { user, currentChannelId, channels } = this.state;
+    const { displayName, userId, metadata } = user;
     return (
       <Container>
         <Header
+          metadata={metadata}
           displayName={displayName}
-          changeDisplayName={this.changeDisplayName}
           changeUser={this.changeUser}
+          changeDisplayName={this.changeDisplayName}
+          changeUserMetadata={this.changeUserMetadata}
         />
         <Row>
           <ChannelList>

@@ -3,7 +3,13 @@
 // TODO: enable jsx-a11y rules back and fix issues.
 
 import React, { Component, Fragment } from 'react';
-import { EkoSyncState, MessageRepository, UserRepository, MessageEditorRepository } from 'eko-sdk';
+import {
+  EkoSyncState,
+  MessageRepository,
+  UserRepository,
+  MessageEditorRepository,
+  MessageFlagRepository,
+} from 'eko-sdk';
 import { message, Popover, Tooltip } from 'antd';
 import {
   FlagContent,
@@ -18,24 +24,27 @@ import {
 class Message extends Component {
   constructor(props) {
     super(props);
+    const { messageId } = this.props;
     this.messageRepo = new MessageRepository();
     this.userRepo = new UserRepository();
+    this.flagRepo = new MessageFlagRepository(messageId);
     this.state = {
       isEditing: false,
       editor: null,
+      isFlaggedByMe: false,
     };
   }
 
   // Flag message
   flagMessage = messageId => {
-    this.messageRepo.flag({ messageId }).then(() => {
+    this.flagRepo.flag({ messageId }).then(() => {
       message.info('Message Flagged');
     });
   };
 
   // Unflag message
   unflagMessage = messageId => {
-    this.messageRepo.unflag({ messageId }).then(() => {
+    this.flagRepo.unflag({ messageId }).then(() => {
       message.info('Message Unflagged');
     });
   };
@@ -96,9 +105,16 @@ class Message extends Component {
     editor.delete().then(() => this.setState({ isEditing: !isEditing }));
   };
 
+  checkIsFlaggedByMe = async visible => {
+    if (visible) {
+      const result = await this.flagRepo.isFlaggedByMe();
+      this.setState({ isFlaggedByMe: result });
+    }
+  };
+
   render() {
     const { user, userId, messageId, syncState, currentUserId, data } = this.props;
-    const { isEditing } = this.state;
+    const { isEditing, isFlaggedByMe } = this.state;
     const userTitle =
       user && user.model
         ? `${user.model.userId}${user.model.displayName ? ` (${user.model.displayName})` : ''}`
@@ -106,12 +122,15 @@ class Message extends Component {
 
     const content = (
       <FlagContent>
-        <a onClick={() => this.flagMessage(messageId)}>
-          <p>Flag Message</p>
-        </a>
-        <a onClick={() => this.unflagMessage(messageId)}>
-          <p>Unflag Message</p>
-        </a>
+        {isFlaggedByMe ? (
+          <a onClick={() => this.unflagMessage(messageId)}>
+            <p>Unflag Message</p>
+          </a>
+        ) : (
+          <a onClick={() => this.flagMessage(messageId)}>
+            <p>Flag Message</p>
+          </a>
+        )}
         <a onClick={() => this.flagUser(userId)}>
           <p>Flag User</p>
         </a>
@@ -150,7 +169,12 @@ class Message extends Component {
               <StyledIcon type="edit" onClick={this.toggleEditor} theme="filled" />
             </Tooltip>
           )}
-          <Popover content={content} placement="right" trigger={['click']}>
+          <Popover
+            content={content}
+            placement="right"
+            onVisibleChange={this.checkIsFlaggedByMe}
+            trigger="click"
+          >
             <Tooltip placement="top" title="Action">
               <StyledIcon type="exclamation-circle" theme="filled" />
             </Tooltip>

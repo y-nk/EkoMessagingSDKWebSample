@@ -24,6 +24,9 @@ const ChannelList = ({ channels, currentChannelId, joinChannel, leaveChannel }) 
             <MemberCount>
               Member count: <b>{channel.memberCount}</b>
             </MemberCount>
+            {/* <MemberCount key={channel.channelId}>
+              Unread count: <b>{channel.unreadCount()}</b>
+            </MemberCount> */}
             <ChannelTags>
               {channel.tags && channel.tags.map(tag => <StyledTag key={tag}>{tag}</StyledTag>)}
             </ChannelTags>

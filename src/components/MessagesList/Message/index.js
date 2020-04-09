@@ -31,8 +31,13 @@ class Message extends Component {
     this.state = {
       isEditing: false,
       editor: null,
-      isFlaggedByMe: false,
+      isFlaggedByMe: undefined,
     };
+  }
+
+  componentDidMount() {
+    const { isFlaggedByMeCache } = this.props;
+    this.setState({ isFlaggedByMe: isFlaggedByMeCache });
   }
 
   // Flag message
@@ -106,7 +111,8 @@ class Message extends Component {
   };
 
   checkIsFlaggedByMe = async visible => {
-    if (visible) {
+    const { isFlaggedByMeCache } = this.props;
+    if (visible && isFlaggedByMeCache !== false) {
       const result = await this.flagRepo.isFlaggedByMe();
       this.setState({ isFlaggedByMe: result });
     }

@@ -50,6 +50,7 @@ export const MessageBubble = styled.span`
   background-color: #f1f1f1;
   margin-left: 3px;
   font-size: 14px;
+  word-break: break-all;
 `;
 
 export const StyledIcon = styled(Icon)`

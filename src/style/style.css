@@ -37,16 +37,23 @@
 
 #new-message {
   border-top: 1px solid #e6e6e6;
-  height: 10vh;
+  max-height: 10vh;
   background-color: #fff;
+}
+
+#new-message > form {
   display: flex;
+  max-height: inherit;
   justify-content: space-between;
 }
 
-#new-message > input {
+#new-message textarea {
+  box-sizing: border-box;
   flex-grow: 2;
   outline: none;
-  padding: 18px 13px 43px 13px;
+  min-height: 3.2em;
+  max-height: inherit;
+  padding: .8em 1em 1em;
   border: none;
   font-size: 14px;
 }
@@ -58,8 +65,8 @@
   border-left: 1px solid #e6e6e6;
   border-radius: 0;
   padding: 0;
-  font-size: 16px;
-  padding: 15px 30px;
+  font-size: 1em;
+  padding: 1em 2em;
   outline: 0;
   -webkit-transition: none;
   transition: none;

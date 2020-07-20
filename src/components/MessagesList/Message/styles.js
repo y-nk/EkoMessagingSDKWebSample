@@ -51,6 +51,7 @@ export const MessageBubble = styled.span`
   margin-left: 3px;
   font-size: 14px;
   word-break: break-all;
+  white-space: pre-wrap;
 `;
 
 export const StyledIcon = styled(Icon)`

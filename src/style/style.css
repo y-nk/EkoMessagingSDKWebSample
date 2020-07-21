@@ -35,11 +35,6 @@
   padding: 6px !important;
 }
 
-#new-message {
-  border-top: 1px solid #e6e6e6;
-  max-height: 10vh;
-  background-color: #fff;
-}
 
 #new-message > form {
   display: flex;
@@ -92,10 +87,6 @@ ul {
   padding: 0;
 }
 
-.fresh span.message-bubble {
-  background-color: #e4f8e6;
-}
-
 .active {
   border-left: 8px solid rgba(41, 203, 114, 0.74);
 }
@@ -116,4 +107,10 @@ ul {
 .ant-dropdown-menu-item-disabled,
 .ant-dropdown-menu-submenu-title-disabled {
   cursor: default !important;
+}
+
+.parent-bubble + .message-content:before {
+  content: '';
+  border-left: 1px dashed #d1d1d1;
+  margin-right: 0.5em;
 }

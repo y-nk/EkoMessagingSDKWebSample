@@ -19,6 +19,7 @@ import {
   MessageBubble,
   StyledIcon,
   StyledInput,
+  ParentBubble,
 } from './styles';
 
 class Message extends Component {
@@ -28,15 +29,28 @@ class Message extends Component {
     this.messageRepo = new MessageRepository();
     this.userRepo = new UserRepository();
     this.flagRepo = new MessageFlagRepository(messageId);
+
     this.state = {
       isEditing: false,
       editor: null,
       isFlaggedByMe: undefined,
+      parentMessage: null,
     };
   }
 
   componentDidMount() {
-    const { isFlaggedByMeCache } = this.props;
+    const { isFlaggedByMeCache, parentId } = this.props;
+
+    if (parentId) {
+      const liveParent = this.messageRepo.getMessage(parentId);
+
+      liveParent.on('dataUpdated', parentMessage => {
+        this.setState({ parentMessage });
+      });
+
+      this.setState({ parentMessage: liveParent.model });
+    }
+
     this.setState({ isFlaggedByMe: isFlaggedByMeCache });
   }
 
@@ -119,8 +133,8 @@ class Message extends Component {
   };
 
   render() {
-    const { user, userId, messageId, syncState, currentUserId, data } = this.props;
-    const { isEditing, isFlaggedByMe } = this.state;
+    const { user, userId, messageId, syncState, currentUserId, data, setParent } = this.props;
+    const { isEditing, isFlaggedByMe, parentMessage } = this.state;
     const userTitle =
       user && user.model
         ? `${user.model.userId}${user.model.displayName ? ` (${user.model.displayName})` : ''}`
@@ -128,33 +142,37 @@ class Message extends Component {
 
     const content = (
       <FlagContent>
-        {isFlaggedByMe ? (
-          <a onClick={() => this.unflagMessage(messageId)}>
-            <p>Unflag Message</p>
-          </a>
-        ) : (
-          <a onClick={() => this.flagMessage(messageId)}>
-            <p>Flag Message</p>
-          </a>
-        )}
-        <a onClick={() => this.flagUser(userId)}>
-          <p>Flag User</p>
-        </a>
-        <a onClick={() => this.unflagUser(userId)}>
-          <p>Unflag User</p>
-        </a>
+        <p>
+          <a onClick={setParent}>Reply</a>
+        </p>
+        <p>
+          {isFlaggedByMe ? (
+            <a onClick={() => this.unflagMessage(messageId)}>Unflag Message</a>
+          ) : (
+            <a onClick={() => this.flagMessage(messageId)}>Flag Message</a>
+          )}
+        </p>
+        <p>
+          <a onClick={() => this.flagUser(userId)}>Flag User</a>
+        </p>
+        <p>
+          <a onClick={() => this.unflagUser(userId)}>Unflag User</a>
+        </p>
       </FlagContent>
     );
 
     return (
       <MessageBlock className={syncState === EkoSyncState.Synced ? 'fresh' : ''}>
         <MessageTitle>{userTitle}:</MessageTitle>
+        {parentMessage ? (
+          <ParentBubble className="parent-bubble">{parentMessage.data.text}</ParentBubble>
+        ) : null}
         <MessageContent className="message-content">
           {syncState === 3 ? (
             'Deleted...'
           ) : (
             <MessageBubble className="message-bubble">
-              {this.renderMessage()}
+              <div>{this.renderMessage()}</div>
               {syncState === EkoSyncState.Synced && <i className="lnr-check" />}
             </MessageBubble>
           )}

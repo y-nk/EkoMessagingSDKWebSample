@@ -75,7 +75,7 @@ class MessagesList extends Component {
 
   render() {
     const { canLoadMore, messages } = this.state;
-    const { currentUserId } = this.props;
+    const { currentUserId, setParent } = this.props;
 
     return (
       <div id="message-infinite-scroll-wrapper">
@@ -88,7 +88,12 @@ class MessagesList extends Component {
         >
           <MessageListPanel>
             {messages.map(message => (
-              <Message key={message.messageId} currentUserId={currentUserId} {...message} />
+              <Message
+                key={message.messageId}
+                currentUserId={currentUserId}
+                setParent={() => setParent(message)}
+                {...message}
+              />
             ))}
           </MessageListPanel>
         </InfiniteScroll>

@@ -175,21 +175,34 @@ class App extends PureComponent {
     }
   };
 
+  setParent = parentMessage => {
+    console.log('APP SETPARENT', parentMessage);
+    this.setState({ parentMessage });
+  };
+
+  unsetParent = () => {
+    this.setState({ parentMessage: null });
+  };
+
   // Send message in channel
   sendMessage = (text, channelId) => {
+    const { parentMessage } = this.state;
+
     // Send message
     const messageLiveObject = messageRepo.createTextMessage({
       channelId,
       text,
+      parentId: parentMessage ? parentMessage.messageId : '',
     });
     // On message sent, run the following code.
     messageLiveObject.on('dataStatusChanged', () => {
       message.success('Message sent');
+      this.unsetParent();
     });
   };
 
   render() {
-    const { user, currentChannelId, channels } = this.state;
+    const { user, currentChannelId, channels, parentMessage } = this.state;
     const { displayName, userId, metadata } = user;
     return (
       <Container>
@@ -213,9 +226,18 @@ class App extends PureComponent {
           </ChannelList>
           <MessageListPanel>
             {currentChannelId && (
-              <MessageList currentUserId={userId} currentChannelId={currentChannelId} />
+              <MessageList
+                currentUserId={userId}
+                currentChannelId={currentChannelId}
+                setParent={this.setParent}
+              />
             )}
-            <AddMessage sendMessage={this.sendMessage} currentChannelId={currentChannelId} />
+            <AddMessage
+              sendMessage={this.sendMessage}
+              currentChannelId={currentChannelId}
+              parentMessage={parentMessage}
+              unsetParent={this.unsetParent}
+            />
           </MessageListPanel>
         </Row>
       </Container>

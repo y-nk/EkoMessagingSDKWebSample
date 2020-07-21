@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 
+import { CloseOutlined } from '@ant-design/icons';
+import { MessageBar, ThreadBubble, CancelButton } from './styles';
+
 class AddMessage extends Component {
   render() {
     let input;
-    const { currentChannelId, sendMessage } = this.props;
+    const { currentChannelId, sendMessage, parentMessage, unsetParent } = this.props;
 
     const sendAction = () => {
       sendMessage(input.value, currentChannelId);
@@ -13,7 +16,15 @@ class AddMessage extends Component {
     };
 
     return (
-      <section id="new-message">
+      <MessageBar id="new-message">
+        {parentMessage ? (
+          <ThreadBubble>
+            {parentMessage.data.text}
+            <CancelButton type="button" onClick={unsetParent}>
+              <CloseOutlined />
+            </CancelButton>
+          </ThreadBubble>
+        ) : null}
         <form onSubmit={e => e.preventDefault()}>
           <textarea
             placeholder="Type your message..."
@@ -39,7 +50,7 @@ class AddMessage extends Component {
             Send
           </button>
         </form>
-      </section>
+      </MessageBar>
     );
   }
 }

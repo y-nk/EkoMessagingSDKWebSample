@@ -22,6 +22,9 @@ import {
   ParentBubble,
 } from './styles';
 
+import ReactionsLister from '../ReactionsLister';
+import ReactionsAdder from '../ReactionsAdder';
+
 class Message extends Component {
   constructor(props) {
     super(props);
@@ -134,6 +137,7 @@ class Message extends Component {
 
   render() {
     const { user, userId, messageId, syncState, currentUserId, data, setParent } = this.props;
+
     const { isEditing, isFlaggedByMe, parentMessage } = this.state;
     const userTitle =
       user && user.model
@@ -204,6 +208,10 @@ class Message extends Component {
             </Tooltip>
           </Popover>
         </MessageContent>
+
+        <ReactionsLister target={this.props}>
+          <ReactionsAdder target={this.props} />
+        </ReactionsLister>
       </MessageBlock>
     );
   }

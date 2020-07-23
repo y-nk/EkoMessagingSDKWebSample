@@ -42,7 +42,7 @@ class Message extends Component {
     const { isFlaggedByMeCache, parentId } = this.props;
 
     if (parentId) {
-      const liveParent = this.messageRepo.getMessage(parentId);
+      const liveParent = this.messageRepo.messageForId(parentId);
 
       liveParent.on('dataUpdated', parentMessage => {
         this.setState({ parentMessage });
